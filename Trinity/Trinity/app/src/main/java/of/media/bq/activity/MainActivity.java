@@ -1,6 +1,6 @@
 package of.media.bq.activity;
 import of.media.bq.R;
-import of.media.bq.fragment.BlueToothFragment;
+import of.media.bq.fragment.BluetoothFragment;
 import of.media.bq.fragment.CarWeiChatFragment;
 import of.media.bq.fragment.HeartRateFragment;
 import of.media.bq.fragment.InteriorViewFragment;
@@ -68,7 +68,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private RelativeLayout carWeiChatRelativeLayout;
     private RelativeLayout returnRelativeLayout;
     private Fragment multiMediaFragment;
-    private Fragment blueToothFragment;
+    private Fragment bluetoothFragment;
     private Fragment carWeiChatFragment;
     private Fragment heartRateFragment;
     private Fragment interiorCarFragment;
@@ -170,11 +170,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 outsideViewRelativeLayout.setVisibility(View.INVISIBLE);
                 carWeiChatRelativeLayout.setVisibility(View.INVISIBLE);
                 returnRelativeLayout.setVisibility(View.INVISIBLE);
-                if(blueToothFragment==null){
-                    blueToothFragment=new BlueToothFragment();
-                    fragmentTransaction.add(R.id.mainFragment,blueToothFragment);
+                if(bluetoothFragment ==null){
+                    bluetoothFragment =new BluetoothFragment();
+                    fragmentTransaction.add(R.id.mainFragment, bluetoothFragment);
                 }else{
-                    fragmentTransaction.show(blueToothFragment);
+                    fragmentTransaction.show(bluetoothFragment);
                 }
                 break;
             case R.id.tv_heartrate:
@@ -268,8 +268,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if(multiMediaFragment!=null){
             fragmentTransaction.hide(multiMediaFragment);
         }
-        if(blueToothFragment!=null){
-            fragmentTransaction.hide(blueToothFragment);
+        if(bluetoothFragment !=null){
+            fragmentTransaction.hide(bluetoothFragment);
         }
         if(carWeiChatFragment!=null){
             fragmentTransaction.hide(carWeiChatFragment);

@@ -26,7 +26,12 @@ import of.media.bq.toast.OneToast;
  */
 public class LoadingActivity extends Activity {
     private final  static long DELAY_TIME=1600;//延迟时间
-    private final static String[] permission={Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    private final static String[] permission={
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_CONTACTS,
+            Manifest.permission.READ_CALL_LOG,
+    };
     private AlertDialog alertDialog;
 
     @Override
@@ -82,7 +87,11 @@ public class LoadingActivity extends Activity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
        switch (requestCode){
            case  1:
-                   if(grantResults.length>0&&grantResults[0]== PackageManager.PERMISSION_GRANTED&&grantResults[1]== PackageManager.PERMISSION_GRANTED){
+                   if( (grantResults.length > 0)
+                           && (grantResults[0]== PackageManager.PERMISSION_GRANTED)
+                           && (grantResults[1]== PackageManager.PERMISSION_GRANTED)
+                           && (grantResults[2]== PackageManager.PERMISSION_GRANTED)
+                           && (grantResults[3]== PackageManager.PERMISSION_GRANTED) ){
                        OneToast.showMessage(this,"权限获取成功");
                        gotoMainActivity();
                    }else{

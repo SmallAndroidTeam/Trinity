@@ -22,4 +22,10 @@
         <item name="android:scrollHorizontally">true</item>
         <!--加一些弹出和退出动画-->
     </style>
+
+    <style name="TabLayoutTextStyle">
+        <item name="android:textSize">@dimen/tabTextSize</item>
+        <item name="android:fontFamily">sans-serif-monospace</item>
+    </style>
+
 </resources>
