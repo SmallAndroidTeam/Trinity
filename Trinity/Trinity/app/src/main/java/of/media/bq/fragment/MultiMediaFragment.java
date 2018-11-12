@@ -2,6 +2,7 @@ package of.media.bq.fragment;
 import of.media.bq.R;
 
 import android.annotation.SuppressLint;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -54,6 +55,7 @@ public class MultiMediaFragment extends Fragment {
     private final  static String TAG="trinity11";
     private final static int UPDATE_TIME=0;//更新时间
     private Fragment onlineFragment,localFragment;
+    public static  boolean isExist=false;//判断多媒体是否运行
     @SuppressLint("HandlerLeak")
     private Handler mhander=new Handler(){
         @Override
@@ -73,7 +75,8 @@ public class MultiMediaFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-   View view=inflater.inflate(R.layout.multi_media_fragment_item,container,false);
+        View view=inflater.inflate(R.layout.multi_media_fragment_item,container,false);
+        isExist=true;
         initView(view);
         initData();
         initListener();
@@ -85,11 +88,15 @@ public class MultiMediaFragment extends Fragment {
                 initLocalPosition();
             }
         });
-       
-   return view;
+        
+        return view;
     }
     
-  
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        isExist=false;
+    }
     
     private void initData() {
         addAllIcon();

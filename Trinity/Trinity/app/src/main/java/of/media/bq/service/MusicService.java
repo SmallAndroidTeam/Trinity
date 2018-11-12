@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -18,14 +19,13 @@ import java.util.List;
 
 
 public class MusicService extends Service {
-        public final  static String PLAY_ACTION="music.play";//播放
+    public final  static String PLAY_ACTION="music.play";//播放
     public final  static String PREV_ACTION="music.prev";//上一首
     public final  static String NEXT_ACTION="music.next";//下一首
     public final  static String PAUSE_ACTION="music.pause";//暂停
-    public final  static String START_ACTION="music.start";//开始
+    public final  static String START_ACTION="music.continue";//继续播放
     public final static String OPENMUSIC_ACTION="music.open";//打开音乐
     public final static String CLOSEMUSIC_ACTION="music.close";//关闭音乐
-    public final static String CONTINUE_ACTION="music.continue";//继续播放
     public final static String RANDOM_ACTION="music.random";//随机
     public final static String LOOPALL_ACTION="music.loop.all";//顺序播放
     public final static String LOOPSINGLE_ACTION="music.loop.single";//单曲循环
@@ -36,10 +36,12 @@ public class MusicService extends Service {
     public final static String UNFAVOUR_ACTION="music.unfavour";//取消收藏
     public final static String FAVOUROPEN_ACTION="music.favour.open";//打开收藏列表
     public final static String UNFAVOURCLOSE_ACTION="music.unfavour.close";//关闭收藏列表
+    public final  static String SEND_MUSIC_SERVICE_FLAG="UserOperation";//目的是为了判断是通过操作播放界面而实现的音乐动作还是通过广播实现的
     private  static  MediaPlayer mMediaPlayer;
     private  static List<Music> musicList=new ArrayList<>();//存储播放的音乐列表
     private static int currentPosition=-1;//设置默认的播放下标
     private static Control mControl;
+    
     public static List<Music> getMusicList() {
         return musicList;
     }
@@ -57,7 +59,6 @@ public class MusicService extends Service {
     }
     public final static String FLAG="autoplay";//自动播放的标志
     public final static String TAG="bq111";
-   
     public static void setCurrentPosition(int currentPosition) {
         MusicService.currentPosition = currentPosition;
     }
@@ -70,7 +71,8 @@ public class MusicService extends Service {
         if(mMediaPlayer==null){
             mMediaPlayer=new MediaPlayer();
         }
-        musicList=list;
+        musicList.clear();
+        musicList.addAll(list);
         currentPosition=Position;
         try {
             mMediaPlayer.reset();
@@ -103,8 +105,6 @@ public class MusicService extends Service {
                     if(mControl!=null){
                         mControl.autoPlay();
                     }
-                    
-                    
                 }
             });
         }
@@ -124,18 +124,24 @@ public class MusicService extends Service {
             String action=intent.getAction();
             assert action != null;
             if(action.contentEquals(PLAY_ACTION)){
-                if(isCanPlay())
-                    playMusic();
-            }else if(action.contentEquals(PREV_ACTION)){
+                if(isCanPlay()){
+                    String send_music_service_flag=intent.getStringExtra("send_music_service_flag");//目的是为了判断是通过操作播放界面而实现的音乐动作还是通过广播实现的
+                    playMusic(send_music_service_flag);
+                }
                 
-                prevMusic();
+            }else if(action.contentEquals(PREV_ACTION)){
+                String send_music_service_flag=intent.getStringExtra("send_music_service_flag");//目的是为了判断是通过操作播放界面而实现的音乐动作还是通过广播实现的
+                prevMusic(send_music_service_flag);
             }else if(action.contentEquals(NEXT_ACTION)){
                 String flag=intent.getStringExtra("flag");//通过flag判断是否为自动播放
-                nextMusic(flag);
+                String send_music_service_flag=intent.getStringExtra("send_music_service_flag");//目的是为了判断是通过操作播放界面而实现的音乐动作还是通过广播实现的
+                nextMusic(flag,send_music_service_flag);
             }else if(action.contentEquals(PAUSE_ACTION)){
-                pauseMusic();
+                String send_music_service_flag=intent.getStringExtra("send_music_service_flag");//目的是为了判断是通过操作播放界面而实现的音乐动作还是通过广播实现的
+                pauseMusic(send_music_service_flag);
             }else if(action.contentEquals(START_ACTION)){
-                startMusic();
+                String send_music_service_flag=intent.getStringExtra("send_music_service_flag");//目的是为了判断是通过操作播放界面而实现的音乐动作还是通过广播实现的
+                startMusic(send_music_service_flag);
             }
         }
         
@@ -143,9 +149,10 @@ public class MusicService extends Service {
     }
     
     
-    private void pauseMusic(){
+    private void pauseMusic(String send_music_service_flag){
         if(isPlaying()){
             mMediaPlayer.pause();
+            sendIntent(getApplicationContext(),PAUSE_ACTION);
             saveMusicProgress();
             if(mControl!=null){
                 mControl.playButton(0);
@@ -157,22 +164,24 @@ public class MusicService extends Service {
     
     
     
-    private  void startMusic(){
+    private  void startMusic(String send_music_service_flag){
         if(mMediaPlayer!=null){
             mMediaPlayer.start();
+            sendIntent(getApplicationContext(),START_ACTION);
             if(mControl!=null){
                 mControl.playButton(1);
             }
         }
     }
     
-    private  void playMusic(){
+    private  void playMusic(String send_music_service_flag){
         
         if(isPlaying()){
             if(mControl!=null){
                 mControl.playButton(0);
             }
             mMediaPlayer.pause();
+            sendIntent(getApplicationContext(),PAUSE_ACTION);
             saveMusicProgress();
         }else{
             if(mControl!=null){
@@ -180,6 +189,7 @@ public class MusicService extends Service {
             }
             
             mMediaPlayer.start();
+            sendIntent(getApplicationContext(),START_ACTION);
         }
         
     }
@@ -193,7 +203,7 @@ public class MusicService extends Service {
         }
     }
     
-    private void prevMusic(){
+    private void prevMusic(String send_music_service_flag){
         
         if(isCanPlay()) {
             saveMusicProgress();
@@ -205,8 +215,14 @@ public class MusicService extends Service {
                 mMediaPlayer.prepare();
                 mMediaPlayer.seekTo(musicList.get(currentPosition).getProgress());
                 mMediaPlayer.start();
+                sendIntent(getApplicationContext(),PREV_ACTION);
                 if(mControl!=null){
                     mControl.playButton(1);
+                }
+                if(send_music_service_flag==null||!send_music_service_flag.contentEquals(SEND_MUSIC_SERVICE_FLAG)){//是通过广播发送的服务
+                    if(mControl!=null){
+                        mControl.updateUI();
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -214,7 +230,7 @@ public class MusicService extends Service {
         }
     }
     
-    private  void nextMusic(String flag){
+    private  void nextMusic(String flag,String send_music_service_flag){
         
         if(isCanPlay()) {
             Log.i("trinity12", "nextMusic:"+flag);
@@ -235,8 +251,14 @@ public class MusicService extends Service {
                 mMediaPlayer.prepare();
                 mMediaPlayer.seekTo(musicList.get(currentPosition).getProgress());
                 mMediaPlayer.start();
+                sendIntent(getApplicationContext(),NEXT_ACTION);
                 if(mControl!=null){
                     mControl.playButton(1);
+                }
+                if(send_music_service_flag==null||!send_music_service_flag.contentEquals(SEND_MUSIC_SERVICE_FLAG)){//是通过广播发送的服务
+                    if(mControl!=null){
+                        mControl.updateUI();
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -322,5 +344,14 @@ public class MusicService extends Service {
     public interface Control{
         void playButton(int index);//控制播放按钮的形状(0暂停，1,播放）
         void autoPlay();//自动播放
+        void updateUI();//更新播放界面的信息
+    }
+    
+    
+    //发送对应action的广播
+    public static void sendIntent(Context context,String action){
+        Intent intent=new Intent(action);
+        intent.setPackage("thread.ofilm.com.testtrinity");
+        context.sendBroadcast(intent);
     }
 }

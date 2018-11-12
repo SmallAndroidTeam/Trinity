@@ -48,6 +48,7 @@ public class LocalMusicFragment extends Fragment implements View.OnTouchListener
     private SeekBar musicSeekbar;
     private TextView musicTitle;
     private TextView singerName;
+    
     @SuppressLint("HandlerLeak")
     private Handler mhandler=new Handler(){
         @Override
@@ -295,6 +296,7 @@ public class LocalMusicFragment extends Fragment implements View.OnTouchListener
                 currentPosition1 = currentPosition1 == 0 ? (MusicService.getMusicSize() - 1 ): currentPosition1 - 1;
                 final    Intent intent1=new Intent(getContext(),MusicService.class);
                 intent1.setAction(MusicService.PREV_ACTION);
+                intent1.putExtra("send_music_service_flag",MusicService.SEND_MUSIC_SERVICE_FLAG);//目的是为了判断是通过操作播放界面而实现的音乐动作还是通过广播实现的
                 Objects.requireNonNull(getActivity()).startService(intent1);
                 setMusicAlbumPosition(currentPosition1);
                 playImageView.setImageResource(R.drawable.play_imageview);
@@ -306,6 +308,7 @@ public class LocalMusicFragment extends Fragment implements View.OnTouchListener
                 
                 final    Intent intent=new Intent(getContext(),MusicService.class);
                 intent.setAction(MusicService.PLAY_ACTION);
+                intent.putExtra("send_music_service_flag",MusicService.SEND_MUSIC_SERVICE_FLAG);//目的是为了判断是通过操作播放界面而实现的音乐动作还是通过广播实现的
                 Objects.requireNonNull(getActivity()).startService(intent);
                 if(MusicService.isPlaying()){
                     //暂停
@@ -322,6 +325,7 @@ public class LocalMusicFragment extends Fragment implements View.OnTouchListener
                 int currentPosition=MusicService.getCurrentPosition();
                 final    Intent intent2=new Intent(getContext(),MusicService.class);
                 intent2.setAction(MusicService.NEXT_ACTION);
+                intent2.putExtra("send_music_service_flag",MusicService.SEND_MUSIC_SERVICE_FLAG);//目的是为了判断是通过操作播放界面而实现的音乐动作还是通过广播实现的
                 Objects.requireNonNull(getActivity()).startService(intent2);
                 currentPosition =( currentPosition >= (MusicService.getMusicSize() - 1 ))? 0 : currentPosition + 1;
                 setMusicAlbumPosition(currentPosition);
@@ -364,6 +368,7 @@ public class LocalMusicFragment extends Fragment implements View.OnTouchListener
         final    Intent intent2=new Intent(getContext(),MusicService.class);
         intent2.setAction(MusicService.NEXT_ACTION);
         intent2.putExtra("flag",MusicService.FLAG);
+        intent2.putExtra("send_music_service_flag",MusicService.SEND_MUSIC_SERVICE_FLAG);//目的是为了判断是通过操作播放界面而实现的音乐动作还是通过广播实现的
         Objects.requireNonNull(getActivity()).startService(intent2);
         currentPosition =( currentPosition >= (MusicService.getMusicSize() - 1 ))? 0 : currentPosition + 1;
         setMusicAlbumPosition(currentPosition);
@@ -372,5 +377,19 @@ public class LocalMusicFragment extends Fragment implements View.OnTouchListener
         singerName.setText(MusicService.getMusicArtist(currentPosition));
         mhandler.sendEmptyMessage(UPDATE_PROGRESS);
         
+    }
+    
+    @Override
+    public void updateUI() {
+        setMusicAlbumPosition(MusicService.getCurrentPosition());
+        if(MusicService.isPlaying()){
+            playImageView.setImageResource(R.drawable.play_imageview);
+        }else{
+            playImageView.setImageResource(R.drawable.pause_imageview);
+        }
+        
+        musicTitle.setText(MusicService.getMusicTitle(MusicService.getCurrentPosition()));
+        singerName.setText(MusicService.getMusicArtist(MusicService.getCurrentPosition()));
+        mhandler.sendEmptyMessage(UPDATE_PROGRESS);
     }
 }
