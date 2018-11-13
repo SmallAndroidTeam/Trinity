@@ -15,7 +15,7 @@ import of.media.bq.service.MusicService;
 
 public class musicReceiver extends BroadcastReceiver {
     public final static String TAG="bq111";
-    
+    public final  static String STOP_ACTION="music.stop";//停止播放
     public final  static String PLAY_ACTION="music.play";//播放
     public final  static String PREV_ACTION="music.prev";//上一首
     public final  static String NEXT_ACTION="music.next";//下一首
@@ -58,6 +58,9 @@ public class musicReceiver extends BroadcastReceiver {
             }
             else if(action.contentEquals(START_ACTION)){
                 sendService(context,START_ACTION);
+            }
+            else if(action.contentEquals(STOP_ACTION)){
+                sendService(context,STOP_ACTION);
             }
         }else{
             sendVoiceBroadCastReceiver(context,intent.getAction(),"您未打开音乐");

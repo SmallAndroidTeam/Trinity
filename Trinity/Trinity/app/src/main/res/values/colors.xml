@@ -24,4 +24,5 @@
     <color name="green">#08cc15</color>
     <color name="baseline">#67e4ca</color>
     <color name="heartRate">#1b9ae4</color>
+    <color name="widget_background_color">#8079d8</color>
 </resources>
