@@ -1,4 +1,4 @@
-package of.media.bq.broadcastReceiver;
+package com.ofilm.bluetooth.broadcastReceiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

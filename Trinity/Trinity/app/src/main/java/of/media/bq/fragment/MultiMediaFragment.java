@@ -40,6 +40,8 @@ import of.media.bq.localInformation.App;
 
 
 public class MultiMediaFragment extends Fragment {
+    private TextView currentSystemTime;
+    private GridView systemStateIconGridview;
     private List<Integer> iconIdList = new ArrayList<Integer>(){};
     private IconAdapter iconAdapter;
     private final static int iconWidth=60;//图标的宽度(单位px)
@@ -49,12 +51,25 @@ public class MultiMediaFragment extends Fragment {
     private TableLayout topSplitLine;
     private ImageView leftTriangleImageview;
     private TableLayout bottomSplitLine;
-
+    private RelativeLayout topReationLayout;
     private final  static String TAG="trinity11";
     private final static int UPDATE_TIME=0;//更新时间
     private Fragment onlineFragment,localFragment;
     public static  boolean isExist=false;//判断多媒体是否运行
-
+    @SuppressLint("HandlerLeak")
+    private Handler mhander=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case UPDATE_TIME:
+                    SimpleDateFormat simpleDateFormat=new SimpleDateFormat("hh:mm:ss");
+                    currentSystemTime.setText(simpleDateFormat.format(new Date()));
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
     private Timer timer;
     private FrameLayout indexFragmeLayout;
     @Nullable
@@ -63,6 +78,7 @@ public class MultiMediaFragment extends Fragment {
         View view=inflater.inflate(R.layout.multi_media_fragment_item,container,false);
         isExist=true;
         initView(view);
+        initData();
         initListener();
         seletTab(1);//一开始选中本地
         App.sContext=getContext();
@@ -72,6 +88,7 @@ public class MultiMediaFragment extends Fragment {
                 initLocalPosition();
             }
         });
+        
         return view;
     }
     
@@ -81,6 +98,20 @@ public class MultiMediaFragment extends Fragment {
         isExist=false;
     }
     
+    private void initData() {
+        addAllIcon();
+        iconAdapter = new IconAdapter(iconIdList);
+        systemStateIconGridview.setAdapter(iconAdapter);
+        systemStateIconGridview.setNumColumns(iconIdList.size());
+        timer = new Timer(true);
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                mhander.sendEmptyMessage(UPDATE_TIME);
+            }
+        },0,100);
+        
+    }
     //添加除去U盘图标的ID
     private void addIconExceptUdiskIcon(){
         iconIdList.clear();
@@ -88,15 +119,32 @@ public class MultiMediaFragment extends Fragment {
         iconIdList.add(R.drawable.signal);
         iconIdList.add(R.drawable.navigation);
         iconIdList.add(R.drawable.bluetooth);
+        RelativeLayout.LayoutParams layoutParams= (RelativeLayout.LayoutParams) systemStateIconGridview.getLayoutParams();
+        layoutParams.width= (iconIdList.size()-1)*(iconWidth+iconSpace)+iconWidth;
+        systemStateIconGridview.setLayoutParams(layoutParams);
+        
     }
-
+    //添加所有的图标ID
+    private void addAllIcon(){
+        iconIdList.clear();
+        iconIdList.add(R.drawable.gps);
+        iconIdList.add(R.drawable.signal);
+        iconIdList.add(R.drawable.navigation);
+        iconIdList.add(R.drawable.bluetooth);
+        iconIdList.add(R.drawable.udisk);
+        RelativeLayout.LayoutParams layoutParams= (RelativeLayout.LayoutParams) systemStateIconGridview.getLayoutParams();
+        layoutParams.width= (iconIdList.size()-1)*(iconWidth+iconSpace)+iconWidth;
+        systemStateIconGridview.setLayoutParams(layoutParams);
+    }
     private void initView(View view) {
-      
+        currentSystemTime = view.findViewById(R.id.current_system_time);
+        systemStateIconGridview = view.findViewById(R.id.system_state_icon_gridview);
         onlineTextview = view.findViewById(R.id.online_textview);
         localTextview = view.findViewById(R.id.local_textview);
         topSplitLine = view.findViewById(R.id.top_split_line);
         leftTriangleImageview = view.findViewById(R.id.left_triangle_imageview);
         bottomSplitLine = view.findViewById(R.id.bottom_split_line);
+        topReationLayout = view.findViewById(R.id.topReationLayout);
         indexFragmeLayout = view.findViewById(R.id.indexFragmeLayout);
         
     }
@@ -176,7 +224,7 @@ public class MultiMediaFragment extends Fragment {
         
         final int coverHeigt=4;//设置覆盖的高度
         //获取顶部RelationLayout的高度
-        final int   topRelationHeight=100;
+        final int   topRelationHeight=DensityUtil.getHeight(topReationLayout);
         //获取本地文字 距离屏幕顶部的距离
         final   int localTextViewScreenTopDistance=DensityUtil.getTopDistance(localTextview);
         final int leftTriangleHeight=DensityUtil.getHeight(leftTriangleImageview);//获取左三角的高度
@@ -193,7 +241,7 @@ public class MultiMediaFragment extends Fragment {
         
         final int coverHeigt=4;//设置覆盖的高度
         //获取顶部RelationLayout的高度
-        final int   topRelationHeight=100;
+        final int   topRelationHeight=DensityUtil.getHeight(topReationLayout);
         //获取在线文字 距离屏幕顶部的距离
         final   int onlineTextViewScreenTopDistance=DensityUtil.getTopDistance(onlineTextview);
         
