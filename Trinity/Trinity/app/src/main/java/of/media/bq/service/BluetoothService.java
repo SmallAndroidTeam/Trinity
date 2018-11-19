@@ -1,4 +1,4 @@
-package com.ofilm.bluetooth.service;
+package of.media.bq.service;
 
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;

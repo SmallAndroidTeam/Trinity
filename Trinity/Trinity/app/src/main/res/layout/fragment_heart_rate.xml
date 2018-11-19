@@ -28,7 +28,7 @@
                     android:gravity="center"
                     android:text="000"
                     android:textColor="@color/small"
-                    android:textSize="50sp" />
+                    android:textSize="200px" />
             </FrameLayout>
             <TextView
                 android:layout_width="match_parent"
@@ -50,7 +50,7 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="300dp"
+                    android:layout_width="230dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center">
 
@@ -98,7 +98,7 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="300dp"
+                    android:layout_width="230dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center">
 
@@ -139,14 +139,8 @@
 
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="70dp">
-
-                <of.media.bq.heartRate.ecgview.CardiographView
-                    android:id="@+id/ecg_data_ecgView"
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp">
-
-                </of.media.bq.heartRate.ecgview.CardiographView>
+                android:layout_height="70dp"
+                android:background="@drawable/bg_grid">
 
                 <of.media.bq.heartRate.ecgview.PathView
                     android:id="@+id/pathView"

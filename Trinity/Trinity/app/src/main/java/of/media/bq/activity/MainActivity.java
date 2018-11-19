@@ -6,6 +6,7 @@ import of.media.bq.fragment.HeartRateFragment;
 import of.media.bq.fragment.InteriorViewFragment;
 import of.media.bq.fragment.MultiMediaFragment;
 import of.media.bq.fragment.OutsideViewFragment;
+import of.media.bq.heartRate.fragment.heartFragment;
 
 import android.annotation.SuppressLint;
 import android.os.Handler;
@@ -187,11 +188,18 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 outsideViewRelativeLayout.setVisibility(View.INVISIBLE);
                 carWeiChatRelativeLayout.setVisibility(View.INVISIBLE);
                 returnRelativeLayout.setVisibility(View.INVISIBLE);
-                if(heartRateFragment==null){
-                    heartRateFragment=new HeartRateFragment();
-                    fragmentTransaction.add(R.id.mainFragment,heartRateFragment);
-                }else{
-                    fragmentTransaction.show(heartRateFragment);
+                if(HeartRateFragment.flag){
+                    fragmentTransaction.show(HeartRateFragment.heartFragment);
+                }else {
+                    if(heartRateFragment==null){
+                        heartRateFragment=new HeartRateFragment();
+                        fragmentTransaction.add(R.id.mainFragment,heartRateFragment);
+                    }else{
+                        fragmentTransaction.show(heartRateFragment);
+                    }
+                }
+                if(heartFragment.isShowHeartRateFragment){
+                    fragmentTransaction.show(heartFragment.HeartRateFragment);
                 }
                 break;
             case R.id.tv_interiorview:
@@ -283,6 +291,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
         if(outsideCarFragment!=null){
             fragmentTransaction.hide(outsideCarFragment);
+        }
+        if(HeartRateFragment.heartFragment!=null){
+            fragmentTransaction.hide(HeartRateFragment.heartFragment);
+        }
+        if(heartFragment.HeartRateFragment!=null){
+            fragmentTransaction.hide(heartFragment.HeartRateFragment);
         }
     }
     
