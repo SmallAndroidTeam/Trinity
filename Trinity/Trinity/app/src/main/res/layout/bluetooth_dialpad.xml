@@ -6,43 +6,44 @@
     android:layout_height="match_parent"
     android:gravity="right"
     android:orientation="horizontal"
-    android:weightSum="2" >
+    android:weightSum="2100" >
 
     <!--  Phone Number/Tips field -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:id="@+id/dialpad_phone_field"
+        android:layout_weight="800"
+        android:layout_gravity="center_horizontal"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:weightSum="522">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_gravity="center_horizontal"
-            android:layout_weight="1"
-            android:gravity="center"
+            android:layout_weight="48"
             android:orientation="horizontal"
-            android:weightSum="6">
+            android:layout_marginHorizontal="91px"
+            android:id="@+id/dialpad_number_layout">
 
             <TextView
                 android:id="@+id/dialpad_phone_number"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="4"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:maxLines="1"
                 android:scrollHorizontally="true"
                 android:editable="false"
                 android:textCursorDrawable="@null"
-                android:textColor="@android:color/white" />
+                android:textColor="@color/bt_text_main"
+                android:textSize="@dimen/btMiddleTextSize"
+                />
 
             <ImageButton
                 android:id="@+id/dialpad_delete_button"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?android:selectableItemBackground"
                 android:src="@drawable/bt_dialpad_action_delete"
                 android:scaleType="fitCenter"
                 />
@@ -50,194 +51,219 @@
         </LinearLayout>
 
         <View
-            android:layout_height="1dp"
+            android:id="@+id/dialpad_underline"
+            android:layout_height="0dp"
             android:layout_width="match_parent"
-            android:layout_marginHorizontal="40dp"
-            android:background="@color/white_1"
+            android:layout_weight="3"
+            android:layout_marginHorizontal="91px"
+            android:background="@color/bt_underline"
             />
 
         <ListView
             android:id="@+id/dialpad_matched_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="4"
+            android:layout_weight="326"
             />
+
+        <!--  Tips field -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="379"
+            android:gravity="center"
+            android:textSize="@dimen/btBigTextSize"
+            android:textColor="@color/bt_text_main"
+            android:id="@+id/dialpad_tips"
+            android:visibility="gone">
+        </TextView>
 
         <ImageButton
             android:id="@+id/dialpad_dial_button"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1.5"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/bt_dialpad_action_dial"
+            android:layout_weight="78"
+            android:layout_gravity="center"
+            android:background="?android:selectableItemBackground"
+            android:src="@drawable/bt_call_or_answer"
             android:scaleType="fitCenter"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="65"
+            android:visibility="invisible"
             />
 
     </LinearLayout>
 
-    <!--  Tips field -->
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:id="@+id/dialpad_tips_filed"
-        android:visibility="gone">
-    </TextView>
-
     <!--  Dialpad field -->
     <LinearLayout
-        android:orientation="vertical"
-        android:paddingVertical="10dp"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_weight="1200"
+        android:orientation="vertical"
+        android:weightSum="522">
 
-        <!--
-        <EditText
-            android:layout_height="wrap_content"
-            android:layout_width="fill_parent"
-            android:id="@+id/phone_number"
-            android:layout_marginTop="20dip"
-            android:layout_marginBottom="10dip"
-            android:maxLines="1"
-            android:scrollHorizontally="true"
-            android:textSize="33sp"
-            android:freezesText="true"
-            android:focusableInTouchMode="true"
-            android:editable="true"
-            android:cursorVisible="true">
-
-        </EditText>
-        -->
-
-        <LinearLayout
-            android:layout_weight="1"
+        <View
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:id="@+id/linearLayout1"
-            android:layout_marginLeft="70dip"
-            android:layout_marginRight="70dip">
+            android:layout_weight="50"
+            android:visibility="invisible"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="105"
+            android:layout_marginHorizontal="40dp"
+            android:id="@+id/linearLayout1">
 
             <Button
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_width="0dp"
                 android:text="@string/dialpad_1_number"
+                android:theme="@style/BTDialPadTextStyle"
                 android:id="@+id/dialpad_number_one">
             </Button>
 
             <Button
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_width="0dp"
                 android:text="@string/dialpad_2_number"
+                android:theme="@style/BTDialPadTextStyle"
                 android:id="@+id/dialpad_number_two">
             </Button>
 
             <Button
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_width="0dp"
                 android:text="@string/dialpad_3_number"
+                android:theme="@style/BTDialPadTextStyle"
                 android:id="@+id/dialpad_number_three">
             </Button>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:id="@+id/linearLayout2"
-            android:layout_marginLeft="70dip"
-            android:layout_marginRight="70dip">
+            android:layout_weight="105"
+            android:layout_marginHorizontal="40dp"
+            android:id="@+id/linearLayout2">
 
             <Button android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_width="0dp"
                 android:text="@string/dialpad_4_number"
+                android:theme="@style/BTDialPadTextStyle"
                 android:id="@+id/dialpad_number_four">
             </Button>
 
             <Button
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_width="0dp"
                 android:text="@string/dialpad_5_number"
+                android:theme="@style/BTDialPadTextStyle"
                 android:id="@+id/dialpad_number_five">
             </Button>
 
             <Button android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_width="0dp"
                 android:text="@string/dialpad_6_number"
+                android:theme="@style/BTDialPadTextStyle"
                 android:id="@+id/dialpad_number_six">
             </Button>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:id="@+id/linearLayout3"
-            android:layout_marginLeft="70dip"
-            android:layout_marginRight="70dip">
+            android:layout_weight="105"
+            android:layout_marginHorizontal="40dp"
+            android:id="@+id/linearLayout3">
 
             <Button android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_width="0dp"
                 android:text="@string/dialpad_7_number"
+                android:theme="@style/BTDialPadTextStyle"
                 android:id="@+id/dialpad_number_seven">
             </Button>
 
             <Button
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_width="0dp"
                 android:text="@string/dialpad_8_number"
+                android:theme="@style/BTDialPadTextStyle"
                 android:id="@+id/dialpad_number_eight">
             </Button>
 
             <Button
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_width="0dp"
                 android:text="@string/dialpad_9_number"
+                android:theme="@style/BTDialPadTextStyle"
                 android:id="@+id/dialpad_number_nine">
             </Button>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:id="@+id/linearLayout4"
-            android:layout_marginLeft="70dip"
-            android:layout_marginRight="70dip">
+            android:layout_weight="105"
+            android:layout_marginHorizontal="40dp"
+            android:id="@+id/linearLayout4">
 
             <Button
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_width="0dp"
                 android:text="@string/dialpad_star_number"
+                android:theme="@style/BTDialPadTextStyle"
                 android:id="@+id/dialpad_number_star">
             </Button>
 
             <Button
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_width="0dp"
                 android:text="@string/dialpad_0_number"
+                android:theme="@style/BTDialPadTextStyle"
                 android:id="@+id/dialpad_number_zero">
             </Button>
 
             <Button
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_width="0dp"
                 android:text="@string/dialpad_pound_number"
+                android:theme="@style/BTDialPadTextStyle"
                 android:id="@+id/dialpad_number_pound">
             </Button>
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="50"
+            android:visibility="invisible"
+            />
+
     </LinearLayout>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="100"
+        android:visibility="invisible"
+        />
+
 </LinearLayout>

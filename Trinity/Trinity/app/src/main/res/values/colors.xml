@@ -26,4 +26,13 @@
     <color name="heartRate">#357cd9</color>
     <color name="heartrate">#4aa2d6</color>
     <color name="widget_background_color">#8079d8</color>
+
+    <!-- Used by BT -->
+    <color name="bt_all_transparent">#00000000</color>
+    <color name="bt_half_transparent">#80000000</color>
+    <color name="bt_underline">#ff2a4462</color>
+
+    <color name="bt_text_main">#ffffffff</color>
+    <color name="bt_text_normal">#80ffffff</color>
+
 </resources>

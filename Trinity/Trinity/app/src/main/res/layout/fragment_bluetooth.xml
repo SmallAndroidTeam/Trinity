@@ -1,33 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="720" >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="right"
+        android:layout_height="0dp"
+        android:layout_weight="198"
         android:orientation="horizontal"
-        android:weightSum="2" >
+        android:weightSum="2100" >
 
-        <android.support.design.widget.TabLayout
-            android:id="@+id/bluetoothTabLayout"
+        <View
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            app:tabBackground="@android:color/transparent"
-            app:tabIndicatorColor="@android:color/white"
-            app:tabSelectedTextColor="@android:color/white"
-            app:tabTextAppearance="@style/TabLayoutTextStyle"
-            app:tabTextColor="#D3D3D3" />
+            android:layout_height="match_parent"
+            android:layout_weight="800"
+            android:visibility="invisible"
+            />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1200"
+            android:orientation="vertical"
+            android:weightSum="198" >
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="104"
+                android:visibility="invisible"
+                />
+
+            <!-- FIXME: Use below to indsted
+                    https://github.com/H07000223/FlycoTabLayout
+                    https://github.com/astuetz/PagerSlidingTabStrip
+                    https://github.com/JakeWharton/ViewPagerIndicator
+             -->
+            <android.support.design.widget.TabLayout
+                android:id="@+id/bluetoothTabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="94"
+                app:tabMaxWidth="0dp"
+                app:tabGravity="fill"
+                app:tabMode="fixed"
+                app:tabBackground="?android:attr/selectableItemBackground"
+                app:tabIndicatorColor="@color/bt_text_main"
+                app:tabTextColor="@color/bt_text_normal"
+                app:tabSelectedTextColor="@color/bt_text_main"
+                app:tabTextAppearance="@style/BTTabLayoutTextStyle"
+                />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="100"
+            android:visibility="invisible"
+            />
 
     </LinearLayout>
 
     <android.support.v4.view.ViewPager
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="522"
         android:id="@+id/bluetoothViewPager"/>
 
 </LinearLayout>

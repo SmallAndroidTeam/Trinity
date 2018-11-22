@@ -1,11 +1,25 @@
 package of.media.bq.bean;
 
+import android.graphics.Bitmap;
+
 public class CallLog {
     private String name;
     private String number;
     private String timestamp;
     private String duration;
-    private String type;
+    private int type;
+    private Bitmap photo;
+
+    @Override
+    public String toString() {
+        return "Contact{" +
+                "name='" + name + '\'' +
+                ", number='" + number + '\'' +
+                ", type='" + type + '\'' +
+                ", timestamp='" + timestamp + '\'' +
+                ", duration='" + duration + '\'' +
+                '}';
+    }
 
     public String getName() {
         return name;
@@ -39,12 +53,19 @@ public class CallLog {
         this.duration = duration;
     }
 
-    public String getType() {
+    public int getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(int type) {
         this.type = type;
     }
 
+    public Bitmap getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(Bitmap photo) {
+        this.photo = photo;
+    }
 }

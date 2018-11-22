@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <!-- Base application theme. -->
@@ -23,9 +24,18 @@
         <!--加一些弹出和退出动画-->
     </style>
 
-    <style name="TabLayoutTextStyle">
-        <item name="android:textSize">@dimen/tabTextSize</item>
+    <!-- Bluetooth Tab Style -->
+    <style name="BTTabLayoutTextStyle">
+        <item name="android:textSize">@dimen/btTextSize</item>
         <item name="android:fontFamily">sans-serif-monospace</item>
+    </style>
+
+    <!-- Bluetooth DialPad Style -->
+    <style name="BTDialPadTextStyle">
+        <item name="android:textColor">@color/bt_text_main</item>
+        <item name="android:textSize">@dimen/btTextSize</item>
+        <item name="android:fontFamily">sans-serif-monospace</item>
+        <item name="colorButtonNormal">#32556E</item>
     </style>
 
 </resources>

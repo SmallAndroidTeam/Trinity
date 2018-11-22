@@ -15,6 +15,7 @@ import java.util.List;
 public class BluetoothCallLogAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private List<CallLog> callLog;
+    private int selectItem = -1;
 
     public BluetoothCallLogAdapter(Context context, List<CallLog> callLog) {
 
@@ -37,15 +38,20 @@ public class BluetoothCallLogAdapter extends BaseAdapter {
         return position;
     }
 
+    public void setSelectItem(int item) {
+        selectItem = item;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = null;
+        ViewHolder holder;
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.bluetooth_calllog_item, parent, false);
             holder = new ViewHolder();
 
             holder.name = convertView.findViewById(R.id.calllog_name);
-            holder.type = convertView.findViewById(R.id.calllog_type);
+            //holder.duration = convertView.findViewById(R.id.calllog_duration);
+            holder.number = convertView.findViewById(R.id.calllog_number);
             holder.timestamp = convertView.findViewById(R.id.calllog_timestamp);
 
             convertView.setTag(holder);
@@ -56,15 +62,21 @@ public class BluetoothCallLogAdapter extends BaseAdapter {
 
         CallLog callLog = this.callLog.get(position);
         holder.name.setText(callLog.getName());
-        holder.type.setText(callLog.getType());
+        //holder.duration.setText(callLog.getDuration());
+        holder.number.setText(callLog.getNumber());
         holder.timestamp.setText(callLog.getTimestamp());
+
+        if (callLog.getType() == android.provider.CallLog.Calls.MISSED_TYPE) {
+            holder.name.setTextColor(android.graphics.Color.RED);
+        }
 
         return convertView;
     }
 
     private class ViewHolder {
         TextView name;
-        TextView type;
+        //TextView duration;
+        TextView number;
         TextView timestamp;
     }
 

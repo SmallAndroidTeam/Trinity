@@ -16,6 +16,7 @@ import java.util.List;
 public class BluetoothContactAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private List<Contact> contacts;
+    private int selectItem = -1;
 
     public BluetoothContactAdapter(Context context, List<Contact> contacts) {
 
@@ -36,6 +37,10 @@ public class BluetoothContactAdapter extends BaseAdapter {
     @Override
     public long getItemId(int position) {
         return position;
+    }
+
+    public void setSelectItem(int item) {
+        selectItem = item;
     }
 
     @Override
@@ -59,6 +64,10 @@ public class BluetoothContactAdapter extends BaseAdapter {
         holder.avatar.setImageBitmap(contact.getPhoto());
         holder.name.setText(contact.getName());
         holder.phone.setText(contact.getNumber());
+
+        if (selectItem == position) {
+            // FIXME: Highlight the selected item
+        }
 
         return convertView;
     }

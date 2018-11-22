@@ -10,26 +10,43 @@ public class BluetoothPagerAdapter extends FragmentPagerAdapter {
 
     private final String[] tabTitle = new String[]{ "拨号键盘", "通讯录", "通话记录", "未接来电"};
 
+    private DialpadFragment dialpadFragment = null;
+    private ContactsFragment contactsFragment = null;
+    private CallLogFragment callLogFragment = null;
+    private MissedCallFragment missedCallFragment = null;
+
     public BluetoothPagerAdapter(FragmentManager fm) {
         super(fm);
     }
  
     @Override
     public Fragment getItem(int position) {
-		Fragment fragment = null;
- 
+        Fragment fragment = null;
+
         switch (position) {
             case 0:
-                fragment = new DialpadFragment();
+                if (dialpadFragment == null) {
+                    dialpadFragment = new DialpadFragment();
+                }
+                fragment = dialpadFragment;
                 break;
             case 1:
-                fragment = new ContactsFragment();
+                if (contactsFragment == null) {
+                    contactsFragment = new ContactsFragment();
+                }
+                fragment = contactsFragment;
                 break;
             case 2:
-                fragment = new CallLogFragment();
+                if (callLogFragment == null) {
+                    callLogFragment = new CallLogFragment();
+                }
+                fragment = callLogFragment;
                 break;
             case 3:
-                fragment = new MissedCallFragment();
+                if (missedCallFragment == null) {
+                    missedCallFragment = new MissedCallFragment();
+                }
+                fragment = missedCallFragment;
                 break;
             default:
                 break;
