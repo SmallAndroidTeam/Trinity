@@ -20,16 +20,17 @@ import android.util.Log;
 import android.widget.MediaController;
 import android.widget.RemoteViews;
 
-import of.media.bq.R;
-import of.media.bq.bean.Music;
-import of.media.bq.localInformation.MusicIconLoader;
-import of.media.bq.toast.OneToast;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import of.media.bq.R;
+import of.media.bq.bean.Music;
+import of.media.bq.localInformation.MusicIconLoader;
+import of.media.bq.toast.OneToast;
 
 
 public class MusicService extends Service {
@@ -66,23 +67,23 @@ public class MusicService extends Service {
     public static List<Music> getMusicList() {
         return musicList;
     }
-
+    
     public static void setmControl(Control mControl) {
         MusicService.mControl = mControl;
     }
-
+    
     public static void setMusicList(List<Music> musicList) {
         MusicService.musicList = musicList;
     }
-
+    
     public static int getCurrentPosition() {
         return currentPosition;
     }
-
+    
     public static void setCurrentPosition(int currentPosition) {
         MusicService.currentPosition = currentPosition;
     }
-
+    
     private  final BroadcastReceiver foregroundIntentReceiver=new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -91,7 +92,7 @@ public class MusicService extends Service {
             }
         }
     };
-
+    
     //初始化服务
     public static void initMusicService(List<Music> list, int Position){
         if(list==null||list.size()==0||Position<0||Position>list.size()-1){
@@ -111,17 +112,17 @@ public class MusicService extends Service {
             e.printStackTrace();
         }
     }
-
-
+    
+    
     public MusicService() {
     }
-
+    
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
     }
-
+    
     @Override
     public void onCreate() {
         super.onCreate();
@@ -133,8 +134,8 @@ public class MusicService extends Service {
                 }
             });
         }
-
-        widgetRemoteViews=new RemoteViews(getPackageName(),R.layout.notification);
+        
+        widgetRemoteViews=new RemoteViews(getPackageName(), R.layout.notification);
         notificationManager= (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         //注册前台服务广播
         final  IntentFilter intentFilter=new IntentFilter();
@@ -144,8 +145,8 @@ public class MusicService extends Service {
         intentFilter.addAction(STOP_ACTION);
         registerReceiver(foregroundIntentReceiver,intentFilter);
     }
-
-
+    
+    
     //初始化前台服务
     private  boolean initNotification(){
         if(isCanPlay()){
@@ -170,32 +171,32 @@ public class MusicService extends Service {
             return false;
         }
     }
-
+    
     private Notification getmNotification(){
-
+        
         final Context ForegroundContext=this;
         if(!initNotification()){//如果初始化服务失败
             return null;
         }
-
+        
         //设置前台绑定事件
         Intent toggleIntent=new Intent(TOGGLEPAUSE_ACTION);
         PendingIntent togglePItent=PendingIntent.getBroadcast(ForegroundContext,0,toggleIntent,0);
         widgetRemoteViews.setOnClickPendingIntent(R.id.widget_play,togglePItent);
-
+        
         Intent nextIntent=new Intent(NEXT_ACTION);
         PendingIntent nextPIntent=PendingIntent.getBroadcast(ForegroundContext,0,nextIntent,0);
         widgetRemoteViews.setOnClickPendingIntent(R.id.widget_next,nextPIntent);
-
+        
         Intent prevIntent=new Intent(PREV_ACTION);
         PendingIntent prevPIntent=PendingIntent.getBroadcast(ForegroundContext,0,prevIntent,0);
         widgetRemoteViews.setOnClickPendingIntent(R.id.widget_pre,prevPIntent);
-
+        
         Intent stopIntent=new Intent(STOP_ACTION);
         PendingIntent stopPIntent=PendingIntent.getBroadcast(ForegroundContext,0,stopIntent,0);
         widgetRemoteViews.setOnClickPendingIntent(R.id.audio_stop,stopPIntent);
-
-
+        
+        
         final  Intent nowPlayingIntent=new Intent(Intent.ACTION_MAIN);
         nowPlayingIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         nowPlayingIntent.setComponent(new ComponentName(getPackageName(),"of.media.bq.activity.MainActivity"));
@@ -222,10 +223,10 @@ public class MusicService extends Service {
         }
         return  mNotification;
     }
-
+    
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
+        
         if(intent==null){
             return super.onStartCommand(intent, flags, startId);
         }
@@ -265,16 +266,16 @@ public class MusicService extends Service {
             //                String send_music_service_flag=intent.getStringExtra("send_music_service_flag");//目的是为了判断是通过操作播放界面而实现的音乐动作还是通过广播实现的
             //                startMusic(send_music_service_flag);
             //            }
-
+            
             handleCommandIntent(intent);
         }
-
+        
         return super.onStartCommand(intent, flags, startId);
     }
-
-
+    
+    
     private void  handleCommandIntent(Intent intent){//type=0为onStartCommand函数处理的消息，type=1为处理前台服务接收的广播
-
+        
         if(!isCanPlay()){//如果不能满足播放条件
             return;
         }
@@ -293,7 +294,7 @@ public class MusicService extends Service {
             prevMusic();
             NotificationChange(PREV_ACTION);//改变前台服务中的音乐状态信息
         }else  if(action.contentEquals(NEXT_ACTION)){
-
+            
             String flag=intent.getStringExtra("flag");//通过flag判断是否为自动播放
             nextMusic(flag);
             NotificationChange(NEXT_ACTION);//改变前台服务中的音乐状态信息
@@ -309,12 +310,12 @@ public class MusicService extends Service {
             startMusic();
             NotificationChange(TOGGLEPAUSE_ACTION);//改变前台服务中的音乐状态信息
         }
-
+        
         Log.i("jfsjfkasjkfj", "handleCommandIntent: "+action);
-
+        
     }
-
-
+    
+    
     private  void NotificationChange(final String what){
         if(what==null){
             return;
@@ -373,10 +374,10 @@ public class MusicService extends Service {
             }
         }).start();
     }
-
-
-
-
+    
+    
+    
+    
     private void pauseMusic(){
         if(isPlaying()){
             mMediaPlayer.pause();
@@ -387,9 +388,9 @@ public class MusicService extends Service {
             }
         }
     }
-
-
-
+    
+    
+    
     private void stopMusic(){
         if(mMediaPlayer!=null){
             mMediaPlayer.stop();
@@ -400,7 +401,7 @@ public class MusicService extends Service {
             }
         }
     }
-
+    
     private  void startMusic(){
         if(mMediaPlayer!=null){
             mMediaPlayer.start();
@@ -410,9 +411,9 @@ public class MusicService extends Service {
             }
         }
     }
-
+    
     private  void playMusic(){
-
+        
         if(isPlaying()){
             if(mControl!=null){
                 mControl.playButton(0);
@@ -427,9 +428,9 @@ public class MusicService extends Service {
             mMediaPlayer.start();
             sendIntent(getApplicationContext(),START_ACTION);
         }
-
+        
     }
-
+    
     //判断是否满足播放条件
     public static boolean isCanPlay(){
         if(musicList.size()==0||currentPosition<0||currentPosition>musicList.size()&&mMediaPlayer!=null){
@@ -438,9 +439,9 @@ public class MusicService extends Service {
             return true;
         }
     }
-
+    
     private void prevMusic(){
-
+        
         if(isCanPlay()) {
             saveMusicProgress();
             currentPosition = currentPosition == 0 ? (getMusicSize() - 1) :( currentPosition - 1);
@@ -461,9 +462,9 @@ public class MusicService extends Service {
             }
         }
     }
-
+    
     private  void nextMusic(String flag){
-
+        
         if(isCanPlay()) {
             Log.i("trinity12", "nextMusic:"+flag);
             if(flag==null||!flag.contentEquals(FLAG)){//如果是普通的下一首
@@ -473,9 +474,9 @@ public class MusicService extends Service {
                 music.setProgress(0);
                 musicList.set(currentPosition,music);
             }
-
+            
             currentPosition = (currentPosition >= (getMusicSize() - 1)) ? 0 : currentPosition + 1;
-
+            
             Log.i("trinity12", "nextMusic: "+musicList.get(currentPosition).getProgress()+"//"+currentPosition);
             try {
                 mMediaPlayer.reset();
@@ -488,13 +489,13 @@ public class MusicService extends Service {
                     mControl.playButton(1);
                     mControl.updateUI();
                 }
-
+                
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
-
+    
     //保存当前播放歌曲的进度
     private void saveMusicProgress(){
         if(isCanPlay()){
@@ -502,18 +503,18 @@ public class MusicService extends Service {
             music.setProgress(mMediaPlayer.getCurrentPosition());
             musicList.set(currentPosition,music);
         }
-
+        
     }
     //判断音乐列表是否为空
     public static boolean isExistMusics(){
         return musicList.size()!=0;
     }
-
+    
     //获取播放列表的音乐个数
     public  static  int getMusicSize(){
         return  musicList.size();
     }
-
+    
     //获取音乐标题
     public  static String getMusicTitle(int index){
         if(musicList.size()==0){
@@ -530,7 +531,7 @@ public class MusicService extends Service {
             return musicList.get(index).getArtist();
         }
     }
-
+    
     //判断音乐是否正在播放
     public static boolean isPlaying(){
         if(mMediaPlayer==null){
@@ -538,7 +539,7 @@ public class MusicService extends Service {
         }
         return mMediaPlayer.isPlaying();
     }
-
+    
     //获取当前播放歌曲的进度
     public static int getMusicCurrentPosition(){
         if(mMediaPlayer==null){
@@ -575,7 +576,7 @@ public class MusicService extends Service {
         // void autoPlay();//自动播放
         void updateUI();//更新播放界面的信息
     }
-
+    
     //发送对应action的广播
     public static void sendIntent(Context context,String action){
         Intent intent=new Intent(action);

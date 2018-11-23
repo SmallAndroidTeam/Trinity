@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@mipmap/background"
     >
 
     <LinearLayout
@@ -27,7 +28,7 @@
                     android:gravity="center"
                     android:text="000"
                     android:textColor="@color/small"
-                    android:textSize="200px" />
+                    android:textSize="50sp" />
             </FrameLayout>
             <TextView
                 android:layout_width="match_parent"
@@ -49,7 +50,7 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="230dp"
+                    android:layout_width="300dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center">
 
@@ -97,7 +98,7 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="230dp"
+                    android:layout_width="300dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center">
 
@@ -138,8 +139,14 @@
 
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="70dp"
-                android:background="@drawable/bg_grid">
+                android:layout_height="70dp">
+
+                <of.media.bq.heartRate.ecgview.CardiographView
+                    android:id="@+id/ecg_data_ecgView"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp">
+
+                </of.media.bq.heartRate.ecgview.CardiographView>
 
                 <of.media.bq.heartRate.ecgview.PathView
                     android:id="@+id/pathView"

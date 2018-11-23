@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.transition.ArcMotion;
 import android.transition.ChangeBounds;
+import android.transition.Fade;
 import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -39,238 +41,141 @@ import of.meida.bq.convertPXAndDP.DensityUtil;
 import of.media.bq.localInformation.App;
 
 
-public class MultiMediaFragment extends Fragment {
-    private TextView currentSystemTime;
-    private GridView systemStateIconGridview;
-    private List<Integer> iconIdList = new ArrayList<Integer>(){};
-    private IconAdapter iconAdapter;
-    private final static int iconWidth=60;//图标的宽度(单位px)
-    private  final  static  int iconSpace=60;//图标的间距(单位px)
-    private TextView onlineTextview;
-    private TextView localTextview;
-    private TableLayout topSplitLine;
-    private ImageView leftTriangleImageview;
-    private TableLayout bottomSplitLine;
-    private RelativeLayout topReationLayout;
-    private final  static String TAG="trinity11";
-    private final static int UPDATE_TIME=0;//更新时间
-    private Fragment onlineFragment,localFragment;
-    public static  boolean isExist=false;//判断多媒体是否运行
-    @SuppressLint("HandlerLeak")
-    private Handler mhander=new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what){
-                case UPDATE_TIME:
-                    SimpleDateFormat simpleDateFormat=new SimpleDateFormat("hh:mm:ss");
-                    currentSystemTime.setText(simpleDateFormat.format(new Date()));
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
-    private Timer timer;
-    private FrameLayout indexFragmeLayout;
+public class MultiMediaFragment extends Fragment implements View.OnClickListener  {
+    
+    private TextView leftOnlinebutton;
+    private TextView leftLocalbutton;
+    private ImageView leftMenuLiner;
+    private Fragment localFragment,onlineFragment;
+    private  static  boolean exist=false;//判断此fragment是否存在
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.multi_media_fragment_item,container,false);
-        isExist=true;
         initView(view);
-        initData();
-        initListener();
-        seletTab(1);//一开始选中本地
-        App.sContext=getContext();
-        view.post(new Runnable() {
-            @Override
-            public void run() {
-                initLocalPosition();
-            }
-        });
-        
+        initEvents();
+        selectTab(0);
+        exist=true;
         return view;
     }
     
     @Override
     public void onDestroy() {
         super.onDestroy();
-        isExist=false;
+        exist=false;
     }
     
-    private void initData() {
-        addAllIcon();
-        iconAdapter = new IconAdapter(iconIdList);
-        systemStateIconGridview.setAdapter(iconAdapter);
-        systemStateIconGridview.setNumColumns(iconIdList.size());
-        timer = new Timer(true);
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                mhander.sendEmptyMessage(UPDATE_TIME);
-            }
-        },0,100);
-        
-    }
-    //添加除去U盘图标的ID
-    private void addIconExceptUdiskIcon(){
-        iconIdList.clear();
-        iconIdList.add(R.drawable.gps);
-        iconIdList.add(R.drawable.signal);
-        iconIdList.add(R.drawable.navigation);
-        iconIdList.add(R.drawable.bluetooth);
-        RelativeLayout.LayoutParams layoutParams= (RelativeLayout.LayoutParams) systemStateIconGridview.getLayoutParams();
-        layoutParams.width= (iconIdList.size()-1)*(iconWidth+iconSpace)+iconWidth;
-        systemStateIconGridview.setLayoutParams(layoutParams);
-        
-    }
-    //添加所有的图标ID
-    private void addAllIcon(){
-        iconIdList.clear();
-        iconIdList.add(R.drawable.gps);
-        iconIdList.add(R.drawable.signal);
-        iconIdList.add(R.drawable.navigation);
-        iconIdList.add(R.drawable.bluetooth);
-        iconIdList.add(R.drawable.udisk);
-        RelativeLayout.LayoutParams layoutParams= (RelativeLayout.LayoutParams) systemStateIconGridview.getLayoutParams();
-        layoutParams.width= (iconIdList.size()-1)*(iconWidth+iconSpace)+iconWidth;
-        systemStateIconGridview.setLayoutParams(layoutParams);
-    }
-    private void initView(View view) {
-        currentSystemTime = view.findViewById(R.id.current_system_time);
-        systemStateIconGridview = view.findViewById(R.id.system_state_icon_gridview);
-        onlineTextview = view.findViewById(R.id.online_textview);
-        localTextview = view.findViewById(R.id.local_textview);
-        topSplitLine = view.findViewById(R.id.top_split_line);
-        leftTriangleImageview = view.findViewById(R.id.left_triangle_imageview);
-        bottomSplitLine = view.findViewById(R.id.bottom_split_line);
-        topReationLayout = view.findViewById(R.id.topReationLayout);
-        indexFragmeLayout = view.findViewById(R.id.indexFragmeLayout);
-        
+    public static boolean isExist() {
+        return exist;
     }
     
-    private void initListener() {
-        
-        onlineTextview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                seletTab(0);
-            }
-        });
-        localTextview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                seletTab(1);
-            }
-        });
-    }
-    
-    //i=0代表选中在线，i=1代表选中本地
-    public void seletTab(int i){
-        final FragmentManager fragmentManager= Objects.requireNonNull(getActivity()).getSupportFragmentManager();
-        final FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction().setCustomAnimations(R.anim.card_flip_top_in,R.anim.card_flip_top_out);
-        hideOnlineAndLocalFragment(fragmentTransaction);  //隐藏在线和本地的Fragment
+    /**
+     *
+     * @param i
+     * i==0,选中本地
+     * i==1,选中在线
+     */
+    private void selectTab(int i) {
         switch (i){
             case 0:
-                onlineTextview.setTextColor(getResources().getColor(R.color.textSelect));
-                localTextview.setTextColor(getResources().getColor(R.color.textNoSelect));
-                initOnlinePosition();
-                if(onlineFragment==null){
-                    onlineFragment=new OnlineFragment();
-                    fragmentTransaction.add(R.id.indexFragmeLayout,onlineFragment);
-                }else{
-                    fragmentTransaction.show(onlineFragment);
-                }
-                
+                leftLocalbutton.callOnClick();
                 break;
             case 1:
-                onlineTextview.setTextColor(getResources().getColor(R.color.textNoSelect));
-                localTextview.setTextColor(getResources().getColor(R.color.textSelect));
-                initLocalPosition();
-                
-                if(localFragment==null){
-                    localFragment=new LocalFragment();
-                    fragmentTransaction.add(R.id.indexFragmeLayout,localFragment);
-                }else{
-                    fragmentTransaction.show(localFragment);
-                }
-                
+                leftOnlinebutton.callOnClick();
                 break;
             default:
                 break;
         }
+    }
+    
+    private void initEvents() {
+        leftOnlinebutton.setOnClickListener(this);
+        leftLocalbutton.setOnClickListener(this);
+    }
+    
+    private void initView(View view) {
+        leftOnlinebutton = view.findViewById(R.id.leftOnlinebutton);
+        leftLocalbutton = view.findViewById(R.id.leftLocalbutton);
+        leftMenuLiner = view.findViewById(R.id.leftMenuLiner);
+    }
+    
+    @Override
+    public void onClick(View v) {
+        Fade fade=new Fade();
+//        leftMenuLiner.setVisibility(View.INVISIBLE);
+//        rightMenuLiner.setVisibility(View.INVISIBLE);
+//        TransitionManager.beginDelayedTransition((ViewGroup) leftMenuLiner.getParent(),fade);
+//        TransitionManager.beginDelayedTransition((ViewGroup) rightMenuLiner.getParent(),fade);
         
+        TransitionManager.beginDelayedTransition((ViewGroup) leftOnlinebutton.getParent(),fade);
+        
+        final FragmentManager fragmentManage= Objects.requireNonNull(getActivity()).getSupportFragmentManager();
+        final FragmentTransaction fragmentTransaction=fragmentManage.beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.card_flip_top_in,R.anim.card_flip_top_out);
+        hideAllFragment(fragmentTransaction);
+        switch (v.getId()){
+            case R.id.leftOnlinebutton:
+                leftOnlinebutton.getPaint().setFakeBoldText(true);//字体加粗
+                leftOnlinebutton.setTextColor(0xffffffff);
+                
+                leftLocalbutton.getPaint().setFakeBoldText(false);
+                leftLocalbutton.setTextColor(0x80ffffff);
+                
+                
+                leftMenuLiner.setImageResource(R.drawable.bg_online);
+                
+                LinearLayout.LayoutParams leftMenuLinerLayoutParams= (LinearLayout.LayoutParams) leftMenuLiner.getLayoutParams();
+                leftMenuLinerLayoutParams.bottomMargin=60;
+                leftMenuLiner.setLayoutParams(leftMenuLinerLayoutParams);
+                
+          
+                if(onlineFragment==null){
+                    onlineFragment=new OnlineFragment();
+                    fragmentTransaction.add(R.id.fl_multi,onlineFragment);
+                }else{
+                    fragmentTransaction.show(onlineFragment);
+                }
+                break;
+            case R.id.leftLocalbutton:
+                
+                leftLocalbutton.getPaint().setFakeBoldText(true);//字体加粗
+                leftLocalbutton.setTextColor(0xffffffff);//100%透明度
+                
+                leftOnlinebutton.getPaint().setFakeBoldText(false);
+                leftOnlinebutton.setTextColor(0x80ffffff);//50%透明度
+                
+                
+                leftMenuLiner.setImageResource(R.drawable.bg_local);
+    
+                LinearLayout.LayoutParams leftMenuLinerLayoutParams1= (LinearLayout.LayoutParams) leftMenuLiner.getLayoutParams();
+                leftMenuLinerLayoutParams1.bottomMargin=0;
+                leftMenuLiner.setLayoutParams(leftMenuLinerLayoutParams1);
+                
+                
+                if(localFragment==null){
+                    localFragment=new LocalFragment();
+                    fragmentTransaction.add(R.id.fl_multi,localFragment);
+                }else{
+                    fragmentTransaction.show(localFragment);
+                }
+                break;
+            default:
+                break;
+        }
+//        leftMenuLiner.setVisibility(View.VISIBLE);
+//        rightMenuLiner.setVisibility(View.VISIBLE);
         fragmentTransaction.commit();
     }
     
-    
-    //隐藏在线和本地的Fragment
-    public void hideOnlineAndLocalFragment(FragmentTransaction fragmentTransaction){
+    private  void hideAllFragment(FragmentTransaction fragmentTransaction){
+        if(localFragment!=null){
+            fragmentTransaction.hide(localFragment);
+        }
         
         if(onlineFragment!=null){
             fragmentTransaction.hide(onlineFragment);
         }
-        if(localFragment!=null){
-            fragmentTransaction.hide(localFragment);
-        }
     }
     
-    
-    
-    //初始化选中本地时 图标的位置
-    public void initLocalPosition(){
-        //获取屏幕高度
-        final long screentHeight= DensityUtil.getWindowHeight(getContext());
-        
-        final int coverHeigt=4;//设置覆盖的高度
-        //获取顶部RelationLayout的高度
-        final int   topRelationHeight=DensityUtil.getHeight(topReationLayout);
-        //获取本地文字 距离屏幕顶部的距离
-        final   int localTextViewScreenTopDistance=DensityUtil.getTopDistance(localTextview);
-        final int leftTriangleHeight=DensityUtil.getHeight(leftTriangleImageview);//获取左三角的高度
-        Log.i(TAG, "screentHeight:"+screentHeight+"\nlocalTextViewScreenTopDistance: "+localTextViewScreenTopDistance+"\ntopRelationHeight:"+topRelationHeight+"\n");
-        int height=localTextViewScreenTopDistance-topRelationHeight;//顶部分割线的高度
-        int leftTriangleMarginTop=height-coverHeigt;
-        int bottomSplitLineMarginTop=height+leftTriangleHeight-3*coverHeigt+2;
-        
-        setSplitLinePosition(height+coverHeigt+2,leftTriangleMarginTop,bottomSplitLineMarginTop);
-    }
-    
-    //初始化选中在线时 图标的位置
-    public void initOnlinePosition(){
-        
-        final int coverHeigt=4;//设置覆盖的高度
-        //获取顶部RelationLayout的高度
-        final int   topRelationHeight=DensityUtil.getHeight(topReationLayout);
-        //获取在线文字 距离屏幕顶部的距离
-        final   int onlineTextViewScreenTopDistance=DensityUtil.getTopDistance(onlineTextview);
-        
-        final int leftTriangleHeight=DensityUtil.getHeight(leftTriangleImageview);//获取左三角的高度
-        int height=onlineTextViewScreenTopDistance-topRelationHeight;//顶部分割线的高度
-        int leftTriangleMarginTop=height-coverHeigt;
-        int bottomSplitLineMarginTop=height+leftTriangleHeight-3*coverHeigt+2;
-        setSplitLinePosition(height+coverHeigt+2,leftTriangleMarginTop,bottomSplitLineMarginTop);
-    }
-    
-    //设置分割线的位置
-    public void setSplitLinePosition(int height,int leftTriangleMarginTop,int bottomSplitLineMarginTop){
-        Log.i(TAG, "height:"+height+"\nleftTriangleMarginTop:"+leftTriangleMarginTop+"\nbottomSplitLineMarginTop:"+bottomSplitLineMarginTop);
-        
-        final ChangeBounds changeBounds=new ChangeBounds();
-        changeBounds.setPathMotion(new ArcMotion());
-        changeBounds.setDuration(500);
-        TransitionManager.beginDelayedTransition((ViewGroup) topSplitLine.getParent(),changeBounds);
-        
-        RelativeLayout.LayoutParams layoutParams= (RelativeLayout.LayoutParams) topSplitLine.getLayoutParams();
-        layoutParams.height=height;
-        topSplitLine.setLayoutParams(layoutParams);
-        RelativeLayout.LayoutParams layoutParams1= (RelativeLayout.LayoutParams) leftTriangleImageview.getLayoutParams();
-        layoutParams1.topMargin=leftTriangleMarginTop;
-        leftTriangleImageview.setLayoutParams(layoutParams1);
-        RelativeLayout.LayoutParams layoutParams2= (RelativeLayout.LayoutParams) bottomSplitLine.getLayoutParams();
-        layoutParams2.topMargin=bottomSplitLineMarginTop;
-        bottomSplitLine.setLayoutParams(layoutParams2);
-        
-    }
     
 }

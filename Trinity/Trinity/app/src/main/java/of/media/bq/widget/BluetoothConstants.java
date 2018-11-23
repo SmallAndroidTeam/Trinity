@@ -1,4 +1,4 @@
-package of.media.bq;
+package of.media.bq.widget;
 
 /**
  * Various strings used to identify operations or data in the Bluetooth service

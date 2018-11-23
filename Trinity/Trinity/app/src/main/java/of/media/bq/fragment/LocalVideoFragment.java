@@ -31,11 +31,11 @@ import java.util.List;
  * Created by MR.XIE on 2018/10/23.
  */
 public class LocalVideoFragment extends Fragment {
-
+    
     private    GridView localVideoGridView;
-    private  LocalVideoAdapter localVideoAdapter;
+    private LocalVideoAdapter localVideoAdapter;
     private  boolean isFirstLoad=true;//判断是否第一次加载
-
+    
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.local_video_fragment,container,false);
@@ -44,58 +44,56 @@ public class LocalVideoFragment extends Fragment {
         initListener();
         return view;
     }
-
-
-
-
-
+    
     private void initData() {
-
+        
         List<Video> videoList=initVideoList();
         SaveData.setLocalVideoList(videoList);
         localVideoAdapter = new LocalVideoAdapter(videoList);
         localVideoGridView.setNumColumns(4);
+        localVideoGridView.setVerticalSpacing(20);
+        localVideoGridView.setHorizontalSpacing(20);
         localVideoGridView.setAdapter(localVideoAdapter);
     }
-  private List<Video> initVideoList(){
-      List<Video> videoList=new ArrayList<>();
-      List<Video> videoAddress= FileManger.getInstance(getContext()).getVideos();//获取测试的视频地址
-
-      if(videoAddress==null||videoAddress.size()<4){
-
-          OneToast.showMessage(getContext(),"请导入至少4个mp4视频到本地");
-        return videoList;
-      }else{
-          Video video=new Video();
-          video.setVideoName("变形金刚4:绝迹重生");
-          video.setVideoThumbnail(R.drawable.vp1);
-          video.setVideoPath(videoAddress.get(0).getVideoPath());
-          videoList.add(video);
-
-          video=new Video();
-          video.setVideoName("蜘蛛侠");
-          video.setVideoThumbnail(R.drawable.vp2);
-          video.setVideoPath(videoAddress.get(1).getVideoPath());
-          videoList.add(video);
-
-          video=new Video();
-          video.setVideoName("复仇者联盟");
-          video.setVideoThumbnail(R.drawable.vp3);
-          video.setVideoPath(videoAddress.get(3).getVideoPath());
-          videoList.add(video);
-
-          video=new Video();
-          video.setVideoName("钢铁侠");
-          video.setVideoThumbnail(R.drawable.vp4);
-          video.setVideoPath(videoAddress.get(4).getVideoPath());
-          videoList.add(video);
-
-          return  videoList;
-      }
-
-  }
-
-
+    private List<Video> initVideoList(){
+        List<Video> videoList=new ArrayList<>();
+        List<Video> videoAddress= FileManger.getInstance(getContext()).getVideos();//获取测试的视频地址
+        
+        if(videoAddress==null||videoAddress.size()<4){
+            
+            OneToast.showMessage(getContext(),"请导入至少4个mp4视频到本地");
+            return videoList;
+        }else{
+            Video video=new Video();
+            video.setVideoName("变形金刚4:绝迹重生");
+            video.setVideoThumbnail(R.drawable.vp1);
+            video.setVideoPath(videoAddress.get(0).getVideoPath());
+            videoList.add(video);
+            
+            video=new Video();
+            video.setVideoName("蜘蛛侠");
+            video.setVideoThumbnail(R.drawable.vp2);
+            video.setVideoPath(videoAddress.get(1).getVideoPath());
+            videoList.add(video);
+            
+            video=new Video();
+            video.setVideoName("复仇者联盟");
+            video.setVideoThumbnail(R.drawable.vp3);
+            video.setVideoPath(videoAddress.get(3).getVideoPath());
+            videoList.add(video);
+            
+            video=new Video();
+            video.setVideoName("钢铁侠");
+            video.setVideoThumbnail(R.drawable.vp4);
+            video.setVideoPath(videoAddress.get(4).getVideoPath());
+            videoList.add(video);
+            
+            return  videoList;
+        }
+        
+    }
+    
+    
     private List<String> getVideoAddress(){
         //adb push  G:\Trinity_project\Video\. /storage/emulated/0/Movies
         List<String> videoAddress=new ArrayList<>();
@@ -106,7 +104,7 @@ public class LocalVideoFragment extends Fragment {
             sdAddress=Environment.getExternalStorageDirectory().getAbsolutePath();//本地存储路径
         }
         sdAddress+="/Movies/";
-
+        
         File file=new File(sdAddress);
         if(!file.exists()||file.isFile()){
             file.mkdir();
@@ -119,7 +117,7 @@ public class LocalVideoFragment extends Fragment {
                         videoAddress.add(file1.getAbsolutePath());
                     }
                 }
-
+                
             }
         }
         return videoAddress;
@@ -127,8 +125,8 @@ public class LocalVideoFragment extends Fragment {
     private void initView(View view) {
         localVideoGridView = view.findViewById(R.id.localVideoGridView);
     }
-
-
+    
+    
     private void initListener() {
 //        localVideoGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override
@@ -146,28 +144,28 @@ public class LocalVideoFragment extends Fragment {
 //
 //            }
 //        });
-
+    
     }
-
-
-
+    
+    
+    
     @Override
     public void onResume() {
         super.onResume();
-
+        
         if(!isFirstLoad){
-           // localVideoGridView.setAdapter(localVideoAdapter);
-           // localVideoAdapter.notifyDataSetChanged();
+            // localVideoGridView.setAdapter(localVideoAdapter);
+            // localVideoAdapter.notifyDataSetChanged();
             Log.i("trinity18", "onResume: "+localVideoAdapter.getCount()+"//"+SaveData.getLocalVideoList().size());
             if(localVideoAdapter.getCount()==0){
-              localVideoAdapter.setVideoList(SaveData.getLocalVideoList());
+                localVideoAdapter.setVideoList(SaveData.getLocalVideoList());
             }
-
+            
         }
-         isFirstLoad=false;
+        isFirstLoad=false;
     }
-
-
+    
+    
     //选中下标为index的视频时
     public void selectVideosByIndex(int index){
         localVideoAdapter.setPosition(index);
@@ -177,6 +175,6 @@ public class LocalVideoFragment extends Fragment {
         transitionSet.addTransition(slide).addTransition(fade);
         TransitionManager.beginDelayedTransition(localVideoGridView,transitionSet);
         localVideoAdapter.notifyDataSetChanged();
-
+        
     }
 }

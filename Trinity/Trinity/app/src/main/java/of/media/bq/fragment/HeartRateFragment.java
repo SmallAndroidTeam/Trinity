@@ -10,8 +10,6 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +41,7 @@ public class HeartRateFragment extends Fragment {
     private TextBannerView h_maximum;
     private TextBannerView h_ave;
     private List<String> mStringList;
-    public  static boolean flag=false;
+
     private List<Integer> list = new ArrayList<>();
     private List<Integer> mList = new ArrayList<>();
 
@@ -65,8 +63,6 @@ public class HeartRateFragment extends Fragment {
     private String DataBase_Name = "heart.db";
     private String Table_Name = "heartrate";
     private MyDatabaseHelper mMyDatabaseHelper;
-    public static   Fragment heartFragment ;
-
 
     @Nullable
     @Override
@@ -144,11 +140,10 @@ public class HeartRateFragment extends Fragment {
 
 
     private void loadData() {
-        int num[] = {375,900,310,800,300,600,300,700,300,900,600,250,900,400,711,500,200,600,300,800};
-        // Random random = new Random();
+        Random random = new Random();
         for (int i = 0; i < 20; i++) {
-            // int num = random.nextInt(1000 - 375) + 375;
-            list.add(num[i]);
+            int num = random.nextInt(1000 - 375) + 375;
+            list.add(num);
         }
         pathView.SetData(list);
     }
@@ -266,43 +261,17 @@ public class HeartRateFragment extends Fragment {
                 setHeartRate(mList);
                 mHeartRate.setText(Integer.toString(heartRate));
                 mHeartRate.setTextColor(Color.WHITE);
-            }
-//            else if (message.what == 0) {
-//                Log.i("h", "hhhhhhhhhhhhhhhhh");
-//                getFragmentManager()
-//                        .beginTransaction()
-//                        .addToBackStack(null)  //将当前fragment加入到返回栈中
-//                        .replace(R.id.mainFragment, heartFragment).commit();
-//            }
-            else  if(message.what == 0){
-                getHeartFragment();
+            } else if (message.what == 0) {
+                Log.i("h", "hhhhhhhhhhhhhhhhh");
+                getFragmentManager()
+                        .beginTransaction()
+                        .addToBackStack(null)  //将当前fragment加入到返回栈中
+                        .replace(R.id.mainFragment, new heartFragment()).commit();
             }
         }
+
     };
 
-    private void  getHeartFragment(){
-        final FragmentManager fragmentManager=getActivity().getSupportFragmentManager();
-        final FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-        hideHeartFragment(fragmentTransaction);
-
-//            fragmentTransaction.addToBackStack(null)  //将当前fragment加入到返回栈中
-//             .replace(R.id.mainFragment, heartFragment).commit();
-//            if(heartFragment==null){
-        heartFragment=new heartFragment();
-        fragmentTransaction.add(R.id.mainFragment,heartFragment);
-        flag = true;
-//            }else{
-//                fragmentTransaction.show(heartFragment);
-//
-//        }
-        fragmentTransaction.commit();
-    }
-
-    private void hideHeartFragment( FragmentTransaction fragmentTransaction){
-        if(heartFragment!=null){
-            fragmentTransaction.remove(heartFragment);
-        }
-    }
     @Override
     public void onDestroy() {
         super.onDestroy();

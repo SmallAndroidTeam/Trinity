@@ -6,7 +6,7 @@ import of.media.bq.fragment.HeartRateFragment;
 import of.media.bq.fragment.InteriorViewFragment;
 import of.media.bq.fragment.MultiMediaFragment;
 import of.media.bq.fragment.OutsideViewFragment;
-import of.media.bq.heartRate.fragment.heartFragment;
+import of.media.bq.localInformation.App;
 
 import android.annotation.SuppressLint;
 import android.os.Handler;
@@ -78,13 +78,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+       // requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
         initEvents();
         initShowFragment();
+        App.sContext=this;
     }
     
     
@@ -188,18 +189,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 outsideViewRelativeLayout.setVisibility(View.INVISIBLE);
                 carWeiChatRelativeLayout.setVisibility(View.INVISIBLE);
                 returnRelativeLayout.setVisibility(View.INVISIBLE);
-                if(HeartRateFragment.flag){
-                    fragmentTransaction.show(HeartRateFragment.heartFragment);
-                }else {
-                    if(heartRateFragment==null){
-                        heartRateFragment=new HeartRateFragment();
-                        fragmentTransaction.add(R.id.mainFragment,heartRateFragment);
-                    }else{
-                        fragmentTransaction.show(heartRateFragment);
-                    }
-                }
-                if(heartFragment.isShowHeartRateFragment){
-                    fragmentTransaction.show(heartFragment.HeartRateFragment);
+                if(heartRateFragment==null){
+                    heartRateFragment=new HeartRateFragment();
+                    fragmentTransaction.add(R.id.mainFragment,heartRateFragment);
+                }else{
+                    fragmentTransaction.show(heartRateFragment);
                 }
                 break;
             case R.id.tv_interiorview:
@@ -291,12 +285,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
         if(outsideCarFragment!=null){
             fragmentTransaction.hide(outsideCarFragment);
-        }
-        if(HeartRateFragment.heartFragment!=null){
-            fragmentTransaction.hide(HeartRateFragment.heartFragment);
-        }
-        if(heartFragment.HeartRateFragment!=null){
-            fragmentTransaction.hide(heartFragment.HeartRateFragment);
         }
     }
     

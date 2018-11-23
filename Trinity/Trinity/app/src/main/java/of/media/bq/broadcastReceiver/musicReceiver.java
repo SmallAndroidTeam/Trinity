@@ -37,8 +37,8 @@ public class musicReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         // TODO: This method is called when the BroadcastReceiver is receiving
         // an Intent broadcast.
-        Log.i(TAG,MultiMediaFragment.isExist+"             ");
-        if(intent!=null&& MultiMediaFragment.isExist){
+        Log.i(TAG, MultiMediaFragment.isExist()+"             ");
+        if(intent!=null&& MultiMediaFragment.isExist()){
             String action=intent.getAction();
             if(action.contentEquals(PLAY_ACTION)) {
                 sendService(context,action);

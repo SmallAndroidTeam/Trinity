@@ -11,22 +11,20 @@
     <color name="transparent">#00000000</color>
     <color name="dialog">#ffff</color>
     <color name="white_1">#a3aeac</color>
-    <color name="small">#4eaef8</color>
+    <color name="small">#378bab</color>
     <color name="background">#445b68</color>
     <color name="line">#6e6b67</color>
     <color name="greenlucency">#ab5d5d</color>
     <color name="trans">#e2d8d8</color>
-    <color name="rate">#ffffff</color>
+    <color name="rate">#fffafa</color>
     <color name="background1">#1D3A67</color>
     <color name="white">#ffffff</color>
-    <color name="gray">#806c6969</color>
+    <color name="gray">#6c6969</color>
     <color name="blue">#15b7ec</color>
-    <color name="green">#6edc4b</color>
-    <color name="baseline">#69e3cc</color>
-    <color name="heartRate">#357cd9</color>
-    <color name="heartrate">#4aa2d6</color>
+    <color name="green">#08cc15</color>
+    <color name="baseline">#67e4ca</color>
+    <color name="heartRate">#1b9ae4</color>
     <color name="widget_background_color">#8079d8</color>
-
     <!-- Used by BT -->
     <color name="bt_all_transparent">#00000000</color>
     <color name="bt_half_transparent">#80000000</color>
@@ -34,5 +32,4 @@
 
     <color name="bt_text_main">#ffffffff</color>
     <color name="bt_text_normal">#80ffffff</color>
-
 </resources>

@@ -1,5 +1,4 @@
 package of.media.bq.fragment;
-import of.media.bq.R;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -15,28 +14,31 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import of.media.bq.bean.Music;
-import of.media.bq.localInformation.MusicUtils;
-import of.media.bq.service.MusicService;
-import of.media.bq.toast.OneToast;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import  of.media.bq.R;
+import of.media.bq.bean.Music;
+import of.media.bq.localInformation.MusicUtils;
+import of.media.bq.service.MusicService;
+import of.media.bq.toast.OneToast;
 
 /**
  * Created by MR.XIE on 2018/10/23.
  */
 public class LocalMusicFragment extends Fragment implements View.OnTouchListener, View.OnClickListener, MusicService.Control {
-
-
+    
+    
     private final  static String TAG="trinity12";
     private final static int UPDATE_PROGRESS=0;//更新进度条
     private final static int UPDATE_UI=1;//更新播放界面的UI信息
@@ -49,7 +51,7 @@ public class LocalMusicFragment extends Fragment implements View.OnTouchListener
     private SeekBar musicSeekbar;
     private TextView musicTitle;
     private TextView singerName;
-
+    
     @SuppressLint("HandlerLeak")
     private Handler mhandler=new Handler(){
         @Override
@@ -76,6 +78,7 @@ public class LocalMusicFragment extends Fragment implements View.OnTouchListener
             }
         }
     };
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -86,7 +89,7 @@ public class LocalMusicFragment extends Fragment implements View.OnTouchListener
         MusicService.setmControl(this);
         return view;
     }
-
+    
     private void initData() {
         if(MusicService.isCanPlay()){//如果前台服务存在
             mhandler.sendEmptyMessage(UPDATE_UI);
@@ -102,14 +105,31 @@ public class LocalMusicFragment extends Fragment implements View.OnTouchListener
             musicTitle.setText(MusicService.getMusicTitle(0));
             singerName.setText(MusicService.getMusicArtist(0));
         }
-
+        
     }
     private List<Music> addData() {
         MusicUtils.initMusicList();
-        List<Music>  musicList=MusicUtils.sMusicList;
+        List<Music>  musicList= MusicUtils.sMusicList;
         List<Music> testMusicList=new ArrayList<>();
         final Integer[] musicAlbumIDs=new Integer[]{R.drawable.mp2,R.drawable.mp5,R.drawable.mp3,R.drawable.mp1,R.drawable.mp4};
         // adb push G:\Trinity_project\music /storage/emulated/0/Music
+
+
+
+//        if(musicList==null){
+//            return  testMusicList;
+//        }else{
+//            Music music=null;
+//            for(int i=0;i<4;i++)
+//            {    music=musicList.get(i);
+//                music.setAlbumImageId(musicAlbumIDs[i]);
+//                testMusicList.add(music);
+//            }
+//            return  testMusicList;
+//        }
+        
+        
+        
         if(musicList==null||musicList.size()<5){
             return  testMusicList;
         }else{
@@ -122,7 +142,7 @@ public class LocalMusicFragment extends Fragment implements View.OnTouchListener
             return  testMusicList;
         }
     }
-
+    
     private List<String> getMusicAddress(){
         List<String> musicAddress=new ArrayList<>();
         String sdAddress=null;
@@ -156,11 +176,14 @@ public class LocalMusicFragment extends Fragment implements View.OnTouchListener
         musicTitle = view.findViewById(R.id.musicTitle);
         singerName = view.findViewById(R.id.singerName);
     }
-
+    
     private void initListener(View view) {
         view.setOnTouchListener(this);
+        
+        
         prevMusicImageview.setOnTouchListener(this);
         nextMusicImageview.setOnTouchListener(this);
+        
         prevImageView.setOnClickListener(this);
         playImageView.setOnClickListener(this);
         nextImageView.setOnClickListener(this);
@@ -172,30 +195,30 @@ public class LocalMusicFragment extends Fragment implements View.OnTouchListener
                     musicSeekbar.setProgress(0);
                 }
             }
-
+            
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
+            
             }
-
+            
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                
                 MusicService.setMusicCurrentPosition(musicSeekbar.getProgress());
                 mhandler.sendEmptyMessage(UPDATE_PROGRESS);
             }
         });
-
+        
     }
-
-
-
+    
+    
+    
     private  float downX=0;//按下时距离屏幕左边的距离
     private final  static float MIN_HORIZONTAL_SLIDE_DISTANCE=100;//最小的水平滑动距离
     private boolean isSLideComplete=false;//滑动是否完成
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
-
+        
         final   int size=MusicService.getMusicSize();
         if(size==0){
             return  false;
@@ -212,10 +235,10 @@ public class LocalMusicFragment extends Fragment implements View.OnTouchListener
                     if(move_X>0){//向右平移
                         prevImageView.callOnClick();
                     }else{//向左平移
-
+                        
                         nextImageView.callOnClick();
                     }
-
+                    
                     isSLideComplete=true;
                     return true;
                 }
@@ -235,29 +258,39 @@ public class LocalMusicFragment extends Fragment implements View.OnTouchListener
                             break;
                     }
                 }
-
+                
                 isSLideComplete=true;
                 Log.i(TAG, "onTouch: 离开");
                 break;
         }
         return false;
     }
-
+    
     //根据下标设置图片专辑显示的图片
     public void setMusicAlbumPosition(int position){
-
+        Animation animationAlpha=new AlphaAnimation(1f,1f);
+        Animation animationAlpha1=new AlphaAnimation(0.5f,0.5f);
+        animationAlpha.setDuration(0);
+        animationAlpha.setFillAfter(true);
+        animationAlpha1.setFillAfter(true);
+        animationAlpha1.setDuration(0);
+        currentMusicImageview.startAnimation(animationAlpha);
+        prevMusicImageview.startAnimation(animationAlpha1);
+        nextMusicImageview.startAnimation(animationAlpha1);
+        
         if(position==-1){//没有音乐
             OneToast.showMessage(getContext(),"没有音乐");
-
             currentMusicImageview.setVisibility(View.VISIBLE);
             prevMusicImageview.setVisibility(View.INVISIBLE);
             nextMusicImageview.setVisibility(View.INVISIBLE);
-
-        }else if(MusicService.getMusicSize()==1){
+            
+        }else if(position>MusicService.getMusicSize()-1){//下标超过最大值不执行任何操作
+        
+        }
+        else if(MusicService.getMusicSize()==1){
+            
             currentMusicImageview.setVisibility(View.VISIBLE);
-            prevMusicImageview.setVisibility(View.INVISIBLE);
             nextMusicImageview.setVisibility(View.INVISIBLE);
-
             currentMusicImageview.setImageResource(MusicService.getMusicList().get(position).getAlbumImageId());
             final AnimationSet animationSet= (AnimationSet) AnimationUtils.loadAnimation(getContext(),R.anim.music_album_change);
             currentMusicImageview.startAnimation(animationSet);
@@ -266,39 +299,30 @@ public class LocalMusicFragment extends Fragment implements View.OnTouchListener
             currentMusicImageview.setImageResource(MusicService.getMusicList().get(position).getAlbumImageId());
             final AnimationSet animationSet= (AnimationSet) AnimationUtils.loadAnimation(getContext(),R.anim.music_album_change);
             currentMusicImageview.startAnimation(animationSet);
-            switch (position){
-                case 0:
-                    prevMusicImageview.setVisibility(View.INVISIBLE);
-                    nextMusicImageview.setVisibility(View.VISIBLE);
-                    nextMusicImageview.setImageResource(MusicService.getMusicList().get(1).getAlbumImageId());
-                    break;
-                case 1:
-                    prevMusicImageview.setVisibility(View.VISIBLE);
-                    nextMusicImageview.setVisibility(View.INVISIBLE);
-                    prevMusicImageview.setImageResource(MusicService.getMusicList().get(0).getAlbumImageId());
-                    break;
-                default:
-                    break;
-            }
-
-        }else{
-
+            prevMusicImageview.setVisibility(View.VISIBLE);
+            nextMusicImageview.setVisibility(View.INVISIBLE);
+            int preIndex=position<=0?1:position-1;
+            prevMusicImageview.setImageResource(MusicService.getMusicList().get(preIndex).getAlbumImageId());
+            
+        }else
+        {
+            
             currentMusicImageview.setVisibility(View.VISIBLE);
             prevMusicImageview.setVisibility(View.VISIBLE);
             nextMusicImageview.setVisibility(View.VISIBLE);
-
+            
             int size=MusicService.getMusicSize();
             int prevPostion=position==0?size-1:position-1;
-            int nextPostion=(position==(size-1))?0:position+1;
+            int nextPostion=(position>=(size-1))?0:position+1;
             prevMusicImageview.setImageResource(MusicService.getMusicList().get(prevPostion).getAlbumImageId());
             currentMusicImageview.setImageResource(MusicService.getMusicList().get(position).getAlbumImageId());
-
+            
             final AnimationSet animationSet= (AnimationSet) AnimationUtils.loadAnimation(getContext(),R.anim.music_album_change);
             currentMusicImageview.startAnimation(animationSet);
             nextMusicImageview.setImageResource(MusicService.getMusicList().get(nextPostion).getAlbumImageId());
         }
     }
-
+    
     @Override
     public void onClick(View view) {
         if(!MusicService.isExistMusics()){
@@ -312,7 +336,6 @@ public class LocalMusicFragment extends Fragment implements View.OnTouchListener
                 final    Intent intent1=new Intent(getContext(),MusicService.class);
                 intent1.setAction(MusicService.PREV_ACTION);
                 Objects.requireNonNull(getActivity()).startService(intent1);
-
                 break;
             case R.id.playImageView:
                 final    Intent intent=new Intent(getContext(),MusicService.class);
@@ -325,13 +348,12 @@ public class LocalMusicFragment extends Fragment implements View.OnTouchListener
                 intent2.setAction(MusicService.NEXT_ACTION);
                 Objects.requireNonNull(getActivity()).startService(intent2);
                 //  currentPosition =( currentPosition >= (MusicService.getMusicSize() - 1 ))? 0 : currentPosition + 1;
-                setMusicAlbumPosition(currentPosition);
                 break;
             default:
                 break;
         }
     }
-
+    
     @Override
     public void playButton(int index) {
         switch (index){

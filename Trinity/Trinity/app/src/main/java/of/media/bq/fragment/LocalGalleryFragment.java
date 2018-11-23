@@ -251,6 +251,8 @@ public class LocalGalleryFragment extends Fragment {
         List<Gallery> galleryList=addData();
         localGalleryAdapter = new LocalGalleryAdapter(getContext(),galleryList);
         localGalleryGridView.setNumColumns(7);
+        localGalleryGridView.setHorizontalSpacing(20);
+        localGalleryGridView.setVerticalSpacing(20);
         localGalleryGridView.setAdapter(localGalleryAdapter);
     }
     private List<Gallery> addData(){

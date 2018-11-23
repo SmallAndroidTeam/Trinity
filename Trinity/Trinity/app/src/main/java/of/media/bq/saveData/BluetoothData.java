@@ -1,10 +1,10 @@
 package of.media.bq.saveData;
 
-import of.media.bq.bean.CallLog;
-import of.media.bq.bean.Contact;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import of.media.bq.bean.CallLog;
+import of.media.bq.bean.Contact;
 
 public class BluetoothData {
 
