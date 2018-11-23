@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="tabTextSize">40px</dimen>
+
     <!-- Used by BT -->
     <dimen name="btTextSize">36px</dimen>
     <dimen name="btMiddleTextSize">40px</dimen>

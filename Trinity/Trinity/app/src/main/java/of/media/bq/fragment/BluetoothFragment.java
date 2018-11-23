@@ -16,12 +16,12 @@ import of.media.bq.R;
 import of.media.bq.adapter.BluetoothPagerAdapter;
 
 public class BluetoothFragment extends Fragment{
-    
+
     private static final String TAG = "BT.BluetoothFragment";
-    
+
     private TabLayout bluetoothTabLayout;
     private ViewPager bluetoothViewPager;
-    
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -31,8 +31,8 @@ public class BluetoothFragment extends Fragment{
         BluetoothPagerAdapter adapter = new BluetoothPagerAdapter(getActivity().getSupportFragmentManager());
         bluetoothViewPager.setAdapter(adapter);
         bluetoothTabLayout.setupWithViewPager(bluetoothViewPager);
-        
+
         return view;
     }
-    
+
 }
