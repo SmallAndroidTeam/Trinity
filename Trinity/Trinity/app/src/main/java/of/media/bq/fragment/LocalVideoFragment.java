@@ -44,10 +44,14 @@ public class LocalVideoFragment extends Fragment {
         initListener();
         return view;
     }
-    
+
     private void initData() {
-        
-        List<Video> videoList=initVideoList();
+
+        //获取测试的视频地址
+        List<Video> videoList = new ArrayList<>(FileManger.getInstance(getContext()).getVideos());
+        if(videoList.size()==0){
+            OneToast.showMessage(getContext(),"当前无本地视频");
+        }
         SaveData.setLocalVideoList(videoList);
         localVideoAdapter = new LocalVideoAdapter(videoList);
         localVideoGridView.setNumColumns(4);
@@ -55,45 +59,9 @@ public class LocalVideoFragment extends Fragment {
         localVideoGridView.setHorizontalSpacing(20);
         localVideoGridView.setAdapter(localVideoAdapter);
     }
-    private List<Video> initVideoList(){
-        List<Video> videoList=new ArrayList<>();
-        List<Video> videoAddress= FileManger.getInstance(getContext()).getVideos();//获取测试的视频地址
-        
-        if(videoAddress==null||videoAddress.size()<4){
-            
-            OneToast.showMessage(getContext(),"请导入至少4个mp4视频到本地");
-            return videoList;
-        }else{
-            Video video=new Video();
-            video.setVideoName("变形金刚4:绝迹重生");
-            video.setVideoThumbnail(R.drawable.vp1);
-            video.setVideoPath(videoAddress.get(0).getVideoPath());
-            videoList.add(video);
-            
-            video=new Video();
-            video.setVideoName("蜘蛛侠");
-            video.setVideoThumbnail(R.drawable.vp2);
-            video.setVideoPath(videoAddress.get(1).getVideoPath());
-            videoList.add(video);
-            
-            video=new Video();
-            video.setVideoName("复仇者联盟");
-            video.setVideoThumbnail(R.drawable.vp3);
-            video.setVideoPath(videoAddress.get(3).getVideoPath());
-            videoList.add(video);
-            
-            video=new Video();
-            video.setVideoName("钢铁侠");
-            video.setVideoThumbnail(R.drawable.vp4);
-            video.setVideoPath(videoAddress.get(4).getVideoPath());
-            videoList.add(video);
-            
-            return  videoList;
-        }
-        
-    }
-    
-    
+
+
+
     private List<String> getVideoAddress(){
         //adb push  G:\Trinity_project\Video\. /storage/emulated/0/Movies
         List<String> videoAddress=new ArrayList<>();

@@ -9,7 +9,7 @@
   <GridView
       android:id="@+id/localVideoGridView"
       android:layout_width="1620px"
-      android:layout_height="wrap_content"
+      android:layout_height="460px"
 
       >
   </GridView>

@@ -3,6 +3,7 @@ import of.media.bq.R;
 
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.transition.Fade;
 import android.transition.Slide;
 import android.transition.TransitionManager;
@@ -16,7 +17,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import of.media.bq.activity.PlayVideoActivity;
+
 import of.media.bq.bean.Video;
+import of.media.bq.localInformation.FileManger;
 import of.media.bq.saveData.SaveData;
 
 import java.util.ArrayList;
@@ -80,8 +83,26 @@ public class LocalVideoAdapter extends BaseAdapter {
             viewHolder= (ViewHolder) view.getTag();
         }
 
-         viewHolder.videoThumbnail.setImageResource(videoList.get(i).getVideoThumbnail());
-          viewHolder.videoNameTextView.setText(videoList.get(i).getVideoName());
+
+        Bitmap videBitmap=null;
+        if(videoList.get(i).getThumbnail()!=null){
+            videBitmap=videoList.get(i).getThumbnail();
+        }else{
+            videBitmap= FileManger.getInstance(viewGroup.getContext()).getVideoThumbnailById(videoList.get(i).getVdieoId());
+            if(videBitmap!=null){
+                Video video=videoList.get(i);
+                video.setThumbnail(videBitmap);
+                videoList.set(i,video);
+            }
+        }
+        if(videBitmap==null){
+            viewHolder.videoThumbnail.setImageResource(R.drawable.video_defalut_thumbnail);
+        }else{
+            viewHolder.videoThumbnail.setImageBitmap(videBitmap);
+        }
+
+
+        viewHolder.videoNameTextView.setText(videoList.get(i).getVideoName());
 
         if(i==position){
             viewHolder.videRelativeLayout.setBackgroundResource(R.drawable.bg_video_choose);

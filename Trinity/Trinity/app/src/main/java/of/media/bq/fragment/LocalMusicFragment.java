@@ -2,6 +2,7 @@ package of.media.bq.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Objects;
 import  of.media.bq.R;
 import of.media.bq.bean.Music;
+import of.media.bq.localInformation.MusicIconLoader;
 import of.media.bq.localInformation.MusicUtils;
 import of.media.bq.service.MusicService;
 import of.media.bq.toast.OneToast;
@@ -89,58 +91,23 @@ public class LocalMusicFragment extends Fragment implements View.OnTouchListener
         MusicService.setmControl(this);
         return view;
     }
-    
     private void initData() {
         if(MusicService.isCanPlay()){//如果前台服务存在
             mhandler.sendEmptyMessage(UPDATE_UI);
         }else{
-            List<Music>  musicList=addData();
+            MusicUtils.initMusicList();
+            List<Music>  musicList=MusicUtils.sMusicList;
             if(musicList.size()>0){
                 MusicService.initMusicService(musicList,0);
                 setMusicAlbumPosition(0);
             }else{
-                OneToast.showMessage(getContext(),"请导入至少5首mp3歌到本地");
+                OneToast.showMessage(getContext(),"当前无本地歌曲");
                 setMusicAlbumPosition(-1);
             }
             musicTitle.setText(MusicService.getMusicTitle(0));
             singerName.setText(MusicService.getMusicArtist(0));
         }
-        
-    }
-    private List<Music> addData() {
-        MusicUtils.initMusicList();
-        List<Music>  musicList= MusicUtils.sMusicList;
-        List<Music> testMusicList=new ArrayList<>();
-        final Integer[] musicAlbumIDs=new Integer[]{R.drawable.mp2,R.drawable.mp5,R.drawable.mp3,R.drawable.mp1,R.drawable.mp4};
-        // adb push G:\Trinity_project\music /storage/emulated/0/Music
 
-
-
-//        if(musicList==null){
-//            return  testMusicList;
-//        }else{
-//            Music music=null;
-//            for(int i=0;i<4;i++)
-//            {    music=musicList.get(i);
-//                music.setAlbumImageId(musicAlbumIDs[i]);
-//                testMusicList.add(music);
-//            }
-//            return  testMusicList;
-//        }
-        
-        
-        
-        if(musicList==null||musicList.size()<5){
-            return  testMusicList;
-        }else{
-            Music music=null;
-            for(int i=0;i<musicAlbumIDs.length;i++)
-            {    music=musicList.get(i);
-                music.setAlbumImageId(musicAlbumIDs[i]);
-                testMusicList.add(music);
-            }
-            return  testMusicList;
-        }
     }
     
     private List<String> getMusicAddress(){
@@ -291,18 +258,22 @@ public class LocalMusicFragment extends Fragment implements View.OnTouchListener
             
             currentMusicImageview.setVisibility(View.VISIBLE);
             nextMusicImageview.setVisibility(View.INVISIBLE);
-            currentMusicImageview.setImageResource(MusicService.getMusicList().get(position).getAlbumImageId());
+            setMusicAlbum(currentMusicImageview,MusicService.getMusicList().get(position).getImage());
             final AnimationSet animationSet= (AnimationSet) AnimationUtils.loadAnimation(getContext(),R.anim.music_album_change);
             currentMusicImageview.startAnimation(animationSet);
         }else if(MusicService.getMusicSize()==2){
             currentMusicImageview.setVisibility(View.VISIBLE);
-            currentMusicImageview.setImageResource(MusicService.getMusicList().get(position).getAlbumImageId());
-            final AnimationSet animationSet= (AnimationSet) AnimationUtils.loadAnimation(getContext(),R.anim.music_album_change);
-            currentMusicImageview.startAnimation(animationSet);
+
+
+            setMusicAlbum(currentMusicImageview,MusicService.getMusicList().get(position).getImage());
+
             prevMusicImageview.setVisibility(View.VISIBLE);
             nextMusicImageview.setVisibility(View.INVISIBLE);
             int preIndex=position<=0?1:position-1;
-            prevMusicImageview.setImageResource(MusicService.getMusicList().get(preIndex).getAlbumImageId());
+
+            setMusicAlbum(prevMusicImageview,MusicService.getMusicList().get(preIndex).getImage());
+            final AnimationSet animationSet= (AnimationSet) AnimationUtils.loadAnimation(getContext(),R.anim.music_album_change);
+            currentMusicImageview.startAnimation(animationSet);
             
         }else
         {
@@ -314,15 +285,38 @@ public class LocalMusicFragment extends Fragment implements View.OnTouchListener
             int size=MusicService.getMusicSize();
             int prevPostion=position==0?size-1:position-1;
             int nextPostion=(position>=(size-1))?0:position+1;
-            prevMusicImageview.setImageResource(MusicService.getMusicList().get(prevPostion).getAlbumImageId());
-            currentMusicImageview.setImageResource(MusicService.getMusicList().get(position).getAlbumImageId());
-            
+
+            setMusicAlbum(prevMusicImageview,MusicService.getMusicList().get(prevPostion).getImage());
+            setMusicAlbum(currentMusicImageview,MusicService.getMusicList().get(position).getImage());
+            setMusicAlbum(nextMusicImageview,MusicService.getMusicList().get(nextPostion).getImage());
+
             final AnimationSet animationSet= (AnimationSet) AnimationUtils.loadAnimation(getContext(),R.anim.music_album_change);
             currentMusicImageview.startAnimation(animationSet);
-            nextMusicImageview.setImageResource(MusicService.getMusicList().get(nextPostion).getAlbumImageId());
+
         }
     }
-    
+
+
+    /**
+     * 设置音乐的专辑图片
+     * @param imageView
+     * @param albumAddress
+     */
+    private void setMusicAlbum(ImageView imageView,String albumAddress){
+
+        if(albumAddress==null){
+            imageView.setImageResource(R.drawable.play_page_default_cover);
+        }else{
+            Bitmap bitmap= MusicIconLoader.getInstance().load(albumAddress);
+            if(bitmap==null){
+                imageView.setImageResource(R.drawable.play_page_default_cover);
+            }else{
+                imageView.setImageBitmap(bitmap);
+            }
+        }
+
+    }
+
     @Override
     public void onClick(View view) {
         if(!MusicService.isExistMusics()){
