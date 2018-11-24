@@ -85,48 +85,22 @@ public class heartFragment extends Fragment implements  View.OnClickListener{
         setTextViewColorAndShowUnderLineByIndex(v);
         switch (v.getId()){
             case R.id.current:
-                if(currentFragment==null){
+
                     currentFragment=new CurrentFragment();
                     fragmentTransaction.add(R.id.main_fragment,currentFragment);
-                }else{
-                    fragmentTransaction.show(currentFragment);
-                }
-//                mCurrent.setBackgroundResource(R.drawable.chart_select);
-//                mWeek.setBackgroundResource(R.drawable.bg_week);
-//                mMonth.setBackgroundResource(R.drawable.bg_month);
                 break;
             case R.id.recent:
-                if(WeekFragment==null){
+
                     WeekFragment=new WeekFragment();
                     fragmentTransaction.add(R.id.main_fragment,WeekFragment);
-                }else{
-                    fragmentTransaction.show(WeekFragment);
-                }
-//                mWeek.setBackgroundResource(R.drawable.chart_select);
-//                mCurrent.setBackgroundResource(R.drawable.bg_now);
-//                mMonth.setBackgroundResource(R.drawable.bg_month);
+
                 break;
             case R.id.more:
-                if(MonthFragment==null){
+
                     MonthFragment=new MonthFragment();
                     fragmentTransaction.add(R.id.main_fragment,MonthFragment);
-                }else{
-                    fragmentTransaction.show(MonthFragment);
-                }
-//                mMonth.setBackgroundResource(R.drawable.chart_select);
-//                mCurrent.setBackgroundResource(R.drawable.bg_now);
-//                mWeek.setBackgroundResource(R.drawable.bg_week);
+
                 break;
-//            case R.id.Test_again:
-////                Intent intent = new Intent(getContext(),MainActivity.class);
-////                startActivity(intent);
-//                if(HeartRateFragment==null){
-//                    HeartRateFragment=new HeartRateFragment();
-//                    fragmentTransaction.add(R.id.mainFragment,HeartRateFragment);
-//                }else{
-//                    fragmentTransaction.show(HeartRateFragment);
-//                }
-//                break;
             default:
                 break;
         }
