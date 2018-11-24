@@ -19,7 +19,7 @@ public class MonthFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         //View view = inflater.inflate(R.layout.chart, null);
-        View view=inflater.inflate(R.layout.chart,container,false);
+        View view=inflater.inflate(R.layout.heart_rate_chart,container,false);
         return view;
     }
 }

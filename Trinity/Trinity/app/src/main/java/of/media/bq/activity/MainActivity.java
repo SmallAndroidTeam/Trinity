@@ -1,4 +1,5 @@
 package of.media.bq.activity;
+
 import of.media.bq.R;
 import of.media.bq.fragment.BluetoothFragment;
 import of.media.bq.fragment.CarWeiChatFragment;
@@ -6,6 +7,7 @@ import of.media.bq.fragment.HeartRateFragment;
 import of.media.bq.fragment.InteriorViewFragment;
 import of.media.bq.fragment.MultiMediaFragment;
 import of.media.bq.fragment.OutsideViewFragment;
+import of.media.bq.heartRate.fragment.heartFragment;
 import of.media.bq.localInformation.App;
 
 import android.annotation.SuppressLint;
@@ -53,7 +55,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
-    
+
     private TextView multiMediaButton;
     private TextView bluetoothTv;
     private TextView heartrateTv;
@@ -75,10 +77,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private Fragment interiorCarFragment;
     private Fragment outsideCarFragment;
     private ImageView bgmenu;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-       // requestWindowFeature(Window.FEATURE_NO_TITLE);
+        // requestWindowFeature(Window.FEATURE_NO_TITLE);
         //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -87,13 +89,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         initShowFragment();
         App.sContext=this;
     }
-    
-    
-    
+
+
+
     private void initShowFragment() {
         multiMediaButton.callOnClick();
     }
-    
+
     private void initEvents() {
         multiMediaButton.setOnClickListener(this);
         bluetoothTv.setOnClickListener(this);
@@ -102,7 +104,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         outsideviewTv.setOnClickListener(this);
         returnTv.setOnClickListener(this);
         carweichatTv.setOnClickListener(this);
-     
+
     }
     private void initView() {
         multiMediaButton = this.findViewById(R.id.tv_multimedia);
@@ -121,27 +123,27 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         carWeiChatRelativeLayout=this.findViewById(R.id.rl_carweichat);
         bgmenu = this.findViewById(R.id.bgmenu);
     }
-    
+
     //设置view透明度变化
     private void setTextViewAlphaChange(View view){
         Animation animation=new AlphaAnimation(0.1f,1.0f);
         animation.setDuration(500);
         view.startAnimation(animation);
     }
-    
+
     @Override
     public void onClick(View v) {
         Fade fade=new Fade();
         fade.setDuration(500);
         TransitionSet transitionSet=new TransitionSet().addTransition(fade);
         TransitionManager.beginDelayedTransition((ViewGroup) bgmenu.getParent(),transitionSet);
-       
+
         final  FragmentManager fragmentManager=getSupportFragmentManager();
         final  FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
         hideAllFragment(fragmentTransaction);
         initTextViewColor();
-        
-        
+
+
         switch (v.getId()){
             case R.id.tv_multimedia:
                 String text=multiMediaButton.getText().toString();
@@ -189,11 +191,18 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 outsideViewRelativeLayout.setVisibility(View.INVISIBLE);
                 carWeiChatRelativeLayout.setVisibility(View.INVISIBLE);
                 returnRelativeLayout.setVisibility(View.INVISIBLE);
-                if(heartRateFragment==null){
-                    heartRateFragment=new HeartRateFragment();
-                    fragmentTransaction.add(R.id.mainFragment,heartRateFragment);
-                }else{
-                    fragmentTransaction.show(heartRateFragment);
+                if(HeartRateFragment.flag){
+                    fragmentTransaction.show(HeartRateFragment.heartFragment);
+                }else {
+                    if(heartRateFragment==null){
+                        heartRateFragment=new HeartRateFragment();
+                        fragmentTransaction.add(R.id.mainFragment,heartRateFragment);
+                    }else{
+                        fragmentTransaction.show(heartRateFragment);
+                    }
+                }
+                if(heartFragment.isShowHeartRateFragment){
+                    fragmentTransaction.show(heartFragment.HeartRateFragment);
                 }
                 break;
             case R.id.tv_interiorview:
@@ -259,13 +268,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 returnRelativeLayout.setVisibility(View.VISIBLE);
                 finish();
                 break;
-            
             default:
                 break;
         }
         fragmentTransaction.commit();
     }
-    
+
     //隐藏所有的fragment
     private  void hideAllFragment(FragmentTransaction fragmentTransaction){
         if(multiMediaFragment!=null){
@@ -286,8 +294,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if(outsideCarFragment!=null){
             fragmentTransaction.hide(outsideCarFragment);
         }
+        if(HeartRateFragment.heartFragment!=null){
+            fragmentTransaction.hide(HeartRateFragment.heartFragment);
+        }
+        if(heartFragment.HeartRateFragment!=null){
+            fragmentTransaction.hide(heartFragment.HeartRateFragment);
+        }
     }
-    
+
     private void initTextViewColor(){
         multiMediaButton.setTextColor(getResources().getColor(R.color.textNoSelect));
         bluetoothTv.setTextColor(getResources().getColor(R.color.textNoSelect));

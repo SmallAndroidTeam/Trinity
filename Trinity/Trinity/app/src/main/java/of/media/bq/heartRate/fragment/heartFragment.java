@@ -6,9 +6,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.transition.Fade;
+import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -20,19 +23,23 @@ import of.media.bq.fragment.HeartRateFragment;
 public class heartFragment extends Fragment implements  View.OnClickListener{
 
     private TextView mCurrent;
-    private TextView mWeek;
-    private TextView mMonth;
+    private TextView mRecent;
+    private TextView mMore;
     private TextView testAgain;
 
     public Fragment currentFragment;
     public Fragment MonthFragment;
     private Fragment WeekFragment;
-    private Fragment HeartRateFragment;
+    public static Fragment HeartRateFragment;
+    private ImageView heartCurrentUndeerLine;
+    private ImageView heartRecentUndeerLine;
+    private ImageView heartMoreUndeerLine;
 
+    public static boolean isShowHeartRateFragment;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        //  View view = inflater.inflate(R.layout.chart, null);
-        View view=inflater.inflate(R.layout.chart_layout,container,false);
+        //  View view = inflater.inflate(R.layout.heart_rate_chart, null);
+        View view=inflater.inflate(R.layout.heart_test_result,container,false);
         initView(view);
         initListener();
         initShowFragment();
@@ -41,27 +48,41 @@ public class heartFragment extends Fragment implements  View.OnClickListener{
 
     private void initListener() {
         mCurrent.setOnClickListener(this);
-        mWeek.setOnClickListener(this);
-        mMonth.setOnClickListener(this);
-        testAgain.setOnClickListener(this);
+        mRecent.setOnClickListener(this);
+        mMore.setOnClickListener(this);
+        testAgain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.Test_again:
+                        setTab(0);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
     }
 
     private void initView(View view){
-      mCurrent=view.findViewById(R.id.current);
-      mWeek=view.findViewById(R.id.week);
-      mMonth=view.findViewById(R.id.month);
-      testAgain =view.findViewById(R.id.Test_again);
-  }
+        mCurrent=view.findViewById(R.id.current);
+        mRecent=view.findViewById(R.id.recent);
+        mMore=view.findViewById(R.id.more);
+        heartCurrentUndeerLine=view.findViewById(R.id.heartCurrentUnderline);
+        heartRecentUndeerLine=view.findViewById(R.id.heartRecentUnderline);
+        heartMoreUndeerLine=view.findViewById(R.id.heartMoreUnderline);
+        testAgain =view.findViewById(R.id.Test_again);
+    }
     private void initShowFragment() {
         mCurrent.callOnClick();
-        mMonth.callOnClick();
     }
 
     @Override
     public void onClick(View v){
         final FragmentManager fragmentManager = this.getFragmentManager();
         final FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-        hideAllFragment(fragmentTransaction);
+        removeAllFragment(fragmentTransaction);
+        setTextViewColorAndShowUnderLineByIndex(v);
         switch (v.getId()){
             case R.id.current:
                 if(currentFragment==null){
@@ -70,60 +91,107 @@ public class heartFragment extends Fragment implements  View.OnClickListener{
                 }else{
                     fragmentTransaction.show(currentFragment);
                 }
-                mCurrent.setBackgroundResource(R.drawable.chart_select);
-                mWeek.setBackgroundResource(R.drawable.bg_week);
-                mMonth.setBackgroundResource(R.drawable.bg_month);
+//                mCurrent.setBackgroundResource(R.drawable.chart_select);
+//                mWeek.setBackgroundResource(R.drawable.bg_week);
+//                mMonth.setBackgroundResource(R.drawable.bg_month);
                 break;
-            case R.id.week:
+            case R.id.recent:
                 if(WeekFragment==null){
                     WeekFragment=new WeekFragment();
                     fragmentTransaction.add(R.id.main_fragment,WeekFragment);
                 }else{
                     fragmentTransaction.show(WeekFragment);
                 }
-                mWeek.setBackgroundResource(R.drawable.chart_select);
-                mCurrent.setBackgroundResource(R.drawable.bg_now);
-                mMonth.setBackgroundResource(R.drawable.bg_month);
+//                mWeek.setBackgroundResource(R.drawable.chart_select);
+//                mCurrent.setBackgroundResource(R.drawable.bg_now);
+//                mMonth.setBackgroundResource(R.drawable.bg_month);
                 break;
-            case R.id.month:
+            case R.id.more:
                 if(MonthFragment==null){
                     MonthFragment=new MonthFragment();
                     fragmentTransaction.add(R.id.main_fragment,MonthFragment);
                 }else{
                     fragmentTransaction.show(MonthFragment);
                 }
-                mMonth.setBackgroundResource(R.drawable.chart_select);
-                mCurrent.setBackgroundResource(R.drawable.bg_now);
-                mWeek.setBackgroundResource(R.drawable.bg_week);
+//                mMonth.setBackgroundResource(R.drawable.chart_select);
+//                mCurrent.setBackgroundResource(R.drawable.bg_now);
+//                mWeek.setBackgroundResource(R.drawable.bg_week);
                 break;
-            case R.id.Test_again:
-//                Intent intent = new Intent(getContext(),MainActivity.class);
-//                startActivity(intent);
-                if(HeartRateFragment==null){
-                    HeartRateFragment=new HeartRateFragment();
-                    fragmentTransaction.add(R.id.mainFragment,HeartRateFragment);
-                }else{
-                    fragmentTransaction.show(HeartRateFragment);
-                }
-                break;
+//            case R.id.Test_again:
+////                Intent intent = new Intent(getContext(),MainActivity.class);
+////                startActivity(intent);
+//                if(HeartRateFragment==null){
+//                    HeartRateFragment=new HeartRateFragment();
+//                    fragmentTransaction.add(R.id.mainFragment,HeartRateFragment);
+//                }else{
+//                    fragmentTransaction.show(HeartRateFragment);
+//                }
+//                break;
             default:
                 break;
         }
         fragmentTransaction.commit();
     }
 
-    private  void hideAllFragment(FragmentTransaction fragmentTransaction){
-        if(currentFragment!=null){
-            fragmentTransaction.hide(currentFragment);
+    private void setTab(int index) {
+        final FragmentManager fm = getActivity().getSupportFragmentManager();
+        final FragmentTransaction fT = fm.beginTransaction();
+        switch (index) {
+            case 0:
+                HeartRateFragment = new HeartRateFragment();
+                fT.add(R.id.mainFragment, HeartRateFragment);
+                isShowHeartRateFragment = true;
+                break;
         }
-        if(MonthFragment!=null){
-            fragmentTransaction.hide(MonthFragment);
+        fT.commit();
+    }
+    public void setTextViewColorAndShowUnderLineByIndex(View v){
+//        musicTextView.setTextColor(getResources().getColor(R.color.textNoSelect));
+//        videoTextView.setTextColor(getResources().getColor(R.color.textNoSelect));
+//        galleryTextView.setTextColor(getResources().getColor(R.color.textNoSelect));
+//        final Fade fade=new Fade();
+//        TransitionManager.beginDelayedTransition((ViewGroup) localMusicUnderline.getParent(),fade);
+//        TransitionManager.beginDelayedTransition((ViewGroup) localVideoUnderline.getParent(),fade);
+//        TransitionManager.beginDelayedTransition((ViewGroup) localGalleryUnderline.getParent(),fade);
+        heartMoreUndeerLine.setVisibility(View.INVISIBLE);
+        heartRecentUndeerLine.setVisibility(View.INVISIBLE);
+        heartCurrentUndeerLine.setVisibility(View.INVISIBLE);
+        switch (v.getId()){
+            case R.id.current:
+//                musicTextView.setTextColor(0xffffffff);//100%透明度，颜色为#ffffff
+//                videoTextView.setTextColor(0x80ffffff);//50%透明度，颜色为#ffffff
+//                galleryTextView.setTextColor(0x80ffffff);
+                heartCurrentUndeerLine.setVisibility(View.VISIBLE);
+                break;
+            case R.id.recent:
+//                musicTextView.setTextColor(0x80ffffff);
+//                videoTextView.setTextColor(0xffffffff);
+//                galleryTextView.setTextColor(0x80ffffff);
+                heartRecentUndeerLine.setVisibility(View.VISIBLE);
+                break;
+            case R.id.more:
+//                musicTextView.setTextColor(0x80ffffff);
+//                videoTextView.setTextColor(0x80ffffff);
+//                galleryTextView.setTextColor(0xffffffff);
+                heartMoreUndeerLine.setVisibility(View.VISIBLE);
+                break;
+            default:
+                break;
         }
-        if(WeekFragment!=null){
-            fragmentTransaction.hide(WeekFragment);
+    }
+
+    private  void removeAllFragment(FragmentTransaction fragmentTransaction){
+        if (currentFragment != null) {
+            fragmentTransaction.remove(currentFragment);
         }
-        if(HeartRateFragment!=null){
-            fragmentTransaction.hide(HeartRateFragment);
+        if (MonthFragment != null) {
+            fragmentTransaction.remove(MonthFragment);
+        }
+        if (WeekFragment != null) {
+            fragmentTransaction.remove(WeekFragment);
+        }
+        if (HeartRateFragment != null) {
+            fragmentTransaction.remove(HeartRateFragment);
         }
     }
 }

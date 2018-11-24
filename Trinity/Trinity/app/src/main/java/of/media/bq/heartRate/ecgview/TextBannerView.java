@@ -65,10 +65,10 @@ public class TextBannerView extends RelativeLayout {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.TextBannerViewStyle, defStyleAttr, 0);
         mInterval = typedArray.getInteger(R.styleable.TextBannerViewStyle_setInterval, mInterval);//文字切换时间间隔
         isSingleLine = typedArray.getBoolean(R.styleable.TextBannerViewStyle_setSingleLine, false);//文字是否为单行
-       int  mTextColor = typedArray.getColor(R.styleable.TextBannerViewStyle_setTextColor,mTextColor0);//设置文字颜色
+        int  mTextColor = typedArray.getColor(R.styleable.TextBannerViewStyle_setTextColor,mTextColor0);//设置文字颜色
         switch (mTextColor){
             case mTextColor0:
-                textColor = getResources().getColor(R.color.heartRate);
+                textColor = getResources().getColor(R.color.heartrate);
                 break;
             case mTextColor1:
                 textColor = getResources().getColor(R.color.rate);
@@ -77,12 +77,12 @@ public class TextBannerView extends RelativeLayout {
         int mTextSizeType =  typedArray.getInt(R.styleable.TextBannerViewStyle_setTextSize,mTextSize0);
         switch (mTextSizeType) {
             case mTextSize0:
-                textSize = 20;
+                textSize =27;
 //                textSize =  typedArray.getInt(R.styleable.TextBannerViewStyle_setTextSize, textSize);
 //                textSize = DisplayUtils.px2sp(context, textSize);
                 break;
             case mTextSize1:
-                textSize = 10;
+                textSize = 12;
 //               textSize =  typedArray.getInt(R.styleable.TextBannerViewStyle_setTextSize, textSize);
 //                textSize = DisplayUtils.px2sp(context, textSize);
                 break;
@@ -213,7 +213,7 @@ public class TextBannerView extends RelativeLayout {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         isDetachedFromWindow=true;
-      //  stopViewAnimator();
+        //  stopViewAnimator();
     }
 
     @Override

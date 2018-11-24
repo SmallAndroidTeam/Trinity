@@ -16,6 +16,8 @@ import android.util.AttributeSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import of.media.bq.R;
+
 
 /**
  * Created by Zhichen
@@ -54,7 +56,7 @@ public class LineChartView extends CharterBase {
     //折线画笔
     private Paint baseLinePaint;
     //折线的宽度
-    private float baseLineWith = dipToPx(0.8f);
+    private float baseLineWith = dipToPx(0.6f);
     //折线下的阴影的画笔
     private Paint baseShadow;
 
@@ -76,7 +78,7 @@ public class LineChartView extends CharterBase {
     private int textColor= Color.parseColor("#ffffff");
 
     //背景颜色
-   // private int bg= Color.parseColor("#1D3A67");
+    // private int bg= Color.parseColor("#1D3A67");
 
 //    /**
 //    *  动画
@@ -141,7 +143,7 @@ public class LineChartView extends CharterBase {
     }
     //初始化各类参数
     private void init(Context context) {
-       // setBackgroundColor(bg);
+        // setBackgroundColor(bg);
         datePaint=new Paint();
         datePaint.setAntiAlias(true);
         datePaint.setStyle(Paint.Style.FILL);
@@ -152,7 +154,7 @@ public class LineChartView extends CharterBase {
         effectPaint=new Paint();
         effectPaint.setAntiAlias(true);
         effectPaint.setStyle(Paint.Style.STROKE);
-        effectPaint.setColor(textColor);
+        effectPaint.setColor(getResources().getColor(R.color.heartRate));
         effectPaint.setStrokeWidth(dateLineWith);
         effectPaint.setStrokeCap(Paint.Cap.ROUND);
 
@@ -211,7 +213,7 @@ public class LineChartView extends CharterBase {
     public void setDataChart(ArrayList<ChartEntity> values){
         setValues(values);
         setParam(values);
-      //  initPath();
+        //  initPath();
 //        initListener();
 //        initAnimator();
 //        if(playAnim){
@@ -233,16 +235,18 @@ public class LineChartView extends CharterBase {
 
     //画虚线
     private void drawEffect(Canvas canvas) {
-                effectPaint.setPathEffect(new DashPathEffect(new float[]{20f,20f},0));
-                float interval=(yo-topBound)/4;
-                for(int i=0;i<5;i++){
-                    Path path = new Path();
-                    path.moveTo(120, topBound+(i*interval));
-                    path.lineTo(width, topBound+(i*interval));
-                    if(i==4){
-                        effectPaint.setPathEffect(new DashPathEffect(new float[]{0f,0f},0));
-                    }
-                    canvas.drawPath(path,effectPaint);
+        effectPaint.setPathEffect(new DashPathEffect(new float[]{20f,20f},0));
+        float interval=(yo-topBound)/4;
+        for(int i=0;i<5;i++){
+            Path path = new Path();
+            path.moveTo(120, topBound+(i*interval));
+            path.lineTo(width, topBound+(i*interval));
+            if(i==4){
+                effectPaint.setPathEffect(new DashPathEffect(new float[]{0f,0f},0));
+                effectPaint.setColor(getResources().getColor(R.color.white_1));
+                effectPaint.setStrokeWidth(1);
+            }
+            canvas.drawPath(path,effectPaint);
         }
     }
     //纵轴文字和坐标
@@ -343,14 +347,14 @@ public class LineChartView extends CharterBase {
             PointF secondPointF = NewPoints.get(i + 1 < NewPoints.size() ? i + 1 : i);
             lX = (secondPointF.x - firstPointF.x) / 2 * smoothness;
             lY = (secondPointF.y - firstPointF.y) / 2 * smoothness;
-             float x2 = p.x - lX;
+            float x2 = p.x - lX;
             float y2 = p.y - lY;
             if (y1 == p.y) {
                 y2 = y1;
             }
             baseLinePath.cubicTo(x1, y1, x2, y2, p.x, p.y);
         }
-       // mPathMeasure.getSegment(0,stop,mDst,true);
+        // mPathMeasure.getSegment(0,stop,mDst,true);
         baseLinePaint.setStyle(Paint.Style.STROKE);
         baseLinePaint.setColor(baseLineColor);
         canvas.drawPath(baseLinePath, baseLinePaint);
