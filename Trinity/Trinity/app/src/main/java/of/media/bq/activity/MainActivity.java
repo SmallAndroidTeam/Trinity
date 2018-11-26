@@ -70,13 +70,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private RelativeLayout outsideViewRelativeLayout;
     private RelativeLayout carWeiChatRelativeLayout;
     private RelativeLayout returnRelativeLayout;
-    private Fragment multiMediaFragment;
+    public static Fragment multiMediaFragment;
     private Fragment bluetoothFragment;
     private Fragment carWeiChatFragment;
     private Fragment heartRateFragment;
     private Fragment interiorCarFragment;
     private Fragment outsideCarFragment;
     private ImageView bgmenu;
+    public static   Fragment replaceFragment;
+    public  static  boolean flag=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,19 +193,18 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 outsideViewRelativeLayout.setVisibility(View.INVISIBLE);
                 carWeiChatRelativeLayout.setVisibility(View.INVISIBLE);
                 returnRelativeLayout.setVisibility(View.INVISIBLE);
-                if(HeartRateFragment.flag){
-                    fragmentTransaction.show(HeartRateFragment.heartFragment);
-                }else {
-                    if(heartRateFragment==null){
-                        heartRateFragment=new HeartRateFragment();
-                        fragmentTransaction.add(R.id.mainFragment,heartRateFragment);
-                    }else{
+
+                if(heartRateFragment==null){
+                    heartRateFragment=new HeartRateFragment();
+                    fragmentTransaction.
+                            addToBackStack(null)
+                            .add(R.id.mainFragment,heartRateFragment);
+                }else{
+                    if(flag){
+                        fragmentTransaction.show(replaceFragment);
+                    }else {
                         fragmentTransaction.show(heartRateFragment);
-                    }
-                }
-                if(heartFragment.isShowHeartRateFragment){
-                    fragmentTransaction.show(heartFragment.HeartRateFragment);
-                }
+                    }}
                 break;
             case R.id.tv_interiorview:
                 setTextViewAlphaChange(interiorviewTv);
@@ -294,11 +295,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if(outsideCarFragment!=null){
             fragmentTransaction.hide(outsideCarFragment);
         }
-        if(HeartRateFragment.heartFragment!=null){
-            fragmentTransaction.hide(HeartRateFragment.heartFragment);
-        }
-        if(heartFragment.HeartRateFragment!=null){
-            fragmentTransaction.hide(heartFragment.HeartRateFragment);
+        if(replaceFragment!=null){
+            fragmentTransaction.hide(replaceFragment);
         }
     }
 

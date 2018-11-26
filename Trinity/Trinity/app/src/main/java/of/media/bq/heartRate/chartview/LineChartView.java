@@ -77,43 +77,6 @@ public class LineChartView extends CharterBase {
     //文字的颜色
     private int textColor= Color.parseColor("#ffffff");
 
-    //背景颜色
-    // private int bg= Color.parseColor("#1D3A67");
-
-//    /**
-//    *  动画
-//     */
-//   private PathMeasure mPathMeasure;
-//   private ValueAnimator valueAnimator;
-//   private float mAnimatorValue;
-//   private  ValueAnimator.AnimatorUpdateListener mUpdateListener;
-//
-//    /**
-//     * 是否播放动画
-//     * @return
-//     */
-//    private boolean playAnim = true;
-//
-//    /**
-//     * m默认的动效周期
-//     * @return
-//     */
-//    private int defaultDuration = 1500;
-//
-//    /**
-//     * 动画是否结束
-//     * @return
-//     */
-//    private boolean isOver = false;
-//
-//    /**
-//     * 填充区域随曲线一起运动
-//     * @return
-//     */
-//    private  boolean fillAreaHasAbin = false;
-
-
-
     public boolean isShadow() {
         return IsShadow;
     }
@@ -210,26 +173,17 @@ public class LineChartView extends CharterBase {
 
         selectPoint=values.size()-1;
     }
+
     public void setDataChart(ArrayList<ChartEntity> values){
         setValues(values);
         setParam(values);
-        //  initPath();
-//        initListener();
-//        initAnimator();
-//        if(playAnim){
-//            valueAnimator.start();
-//        }
-//        invalidate();
     }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        //drawShell(canvas);
         drawEffect(canvas);
         getCoordinatePoint(canvas);
-//        if (!animFinished && !animator.isRunning()&&values!=null&&values.size()>0) {
-//            playAnimation();
-//        }
         drawEffectText(canvas);
     }
 
@@ -249,6 +203,7 @@ public class LineChartView extends CharterBase {
             canvas.drawPath(path,effectPaint);
         }
     }
+
     //纵轴文字和坐标
     private void drawEffectText(Canvas canvas) {
         textPaint.setTextSize(dipToPx(12));
@@ -257,7 +212,6 @@ public class LineChartView extends CharterBase {
         float interval=(yo-topBound)/4;
         for(int i=0;i<5;i++){
             int XLABEL[] = {200,150,100,50,0};
-            //java.text.DecimalFormat df = new java.text.DecimalFormat("#.0");
             canvas.drawText(Integer.toString(XLABEL[i]),50,topBound+(i*interval)+dipToPx(4),textPaint);
         }
     }
@@ -274,7 +228,6 @@ public class LineChartView extends CharterBase {
         for (int i = 0; i < valuesLength; i++) {
             float x = i*interval+firstX;
             float y = topBound + ((yo-topBound) - ( values.get(i).getValue()) * (yo-topBound) / dY);
-            // Log.e("GXL_Chart","yo="+yo+"-----valuesTransition["+i+"]="+valuesTransition[i]+"-----minY="+minY+"-----dY="+dY+"-----y="+y);
             points.add(new PointF(x, y));
         }
         drawBendLine(canvas,points);
@@ -293,11 +246,6 @@ public class LineChartView extends CharterBase {
                 textPaint.setTextAlign(Paint.Align.CENTER);
                 textPaint.setColor(textColor);
                 canvas.drawText(valuesText[i], Points.get(i).x, yo + (height - yo) / 2 + dipToPx(12) / 3, textPaint);
-//
-//                //绘制提示文字
-//                textPaint.setTextSize(dipToPx(11));
-//                textPaint.setTextAlign(Paint.Align.CENTER);
-//                textPaint.setColor(textColor);
 
                 String hintText = String.valueOf(valuesData[i]) ;
                 Rect rect = new Rect();
@@ -354,7 +302,6 @@ public class LineChartView extends CharterBase {
             }
             baseLinePath.cubicTo(x1, y1, x2, y2, p.x, p.y);
         }
-        // mPathMeasure.getSegment(0,stop,mDst,true);
         baseLinePaint.setStyle(Paint.Style.STROKE);
         baseLinePaint.setColor(baseLineColor);
         canvas.drawPath(baseLinePath, baseLinePaint);
@@ -375,49 +322,6 @@ public class LineChartView extends CharterBase {
             canvas.drawPath(baseLinePath, baseShadow);
         }
     }
-
-//    private void initPath(){
-//        path.moveTo(points[points.length-1][0],points[points.length-1][1]);
-//        for (int i = points.length-1; i >=0; i--) {
-//            path.lineTo(points[i][0],points[i][1]);
-//        }
-//        mPathMeasure=new PathMeasure(path,false);
-//    }
-//    private void initListener() {
-//        mUpdateListener = new ValueAnimator.AnimatorUpdateListener() {
-//            @Override
-//            public void onAnimationUpdate(ValueAnimator animation) {
-//                mAnimatorValue = (float) animation.getAnimatedValue();
-//                invalidate();
-//            }
-//        };
-//    }
-//    private void initAnimator() {
-//        valueAnimator = ValueAnimator.ofFloat(1, 0).setDuration(defaultDuration);
-//        valueAnimator.addUpdateListener(mUpdateListener);
-//        valueAnimator.addListener(new Animator.AnimatorListener() {
-//            @Override
-//            public void onAnimationStart(Animator animation) {
-//
-//            }
-//
-//            @Override
-//            public void onAnimationEnd(Animator animation) {
-//                isOver=true;
-//                invalidate();
-//            }
-//
-//            @Override
-//            public void onAnimationCancel(Animator animation) {
-//
-//            }
-//
-//            @Override
-//            public void onAnimationRepeat(Animator animation) {
-//
-//            }
-//        });
-//    }
     /**
      * dip 转换成px
      * @param dip

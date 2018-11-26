@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 
 import of.media.bq.R;
+import of.media.bq.activity.MainActivity;
 import of.media.bq.fragment.HeartRateFragment;
 /**
  * Create By rongxinglan IN 2018/11/8
@@ -23,6 +24,9 @@ import of.media.bq.fragment.HeartRateFragment;
 public class heartFragment extends Fragment implements  View.OnClickListener{
 
     private TextView mCurrent;
+
+
+
     private TextView mRecent;
     private TextView mMore;
     private TextView testAgain;
@@ -86,19 +90,19 @@ public class heartFragment extends Fragment implements  View.OnClickListener{
         switch (v.getId()){
             case R.id.current:
 
-                    currentFragment=new CurrentFragment();
-                    fragmentTransaction.add(R.id.main_fragment,currentFragment);
+                currentFragment=new CurrentFragment();
+                fragmentTransaction.add(R.id.main_fragment,currentFragment);
                 break;
             case R.id.recent:
 
-                    WeekFragment=new WeekFragment();
-                    fragmentTransaction.add(R.id.main_fragment,WeekFragment);
+                WeekFragment=new WeekFragment();
+                fragmentTransaction.add(R.id.main_fragment,WeekFragment);
 
                 break;
             case R.id.more:
 
-                    MonthFragment=new MonthFragment();
-                    fragmentTransaction.add(R.id.main_fragment,MonthFragment);
+                MonthFragment=new MonthFragment();
+                fragmentTransaction.add(R.id.main_fragment,MonthFragment);
 
                 break;
             default:
@@ -108,16 +112,20 @@ public class heartFragment extends Fragment implements  View.OnClickListener{
     }
 
     private void setTab(int index) {
-        final FragmentManager fm = getActivity().getSupportFragmentManager();
-        final FragmentTransaction fT = fm.beginTransaction();
+        //   final FragmentManager fm = getActivity().getSupportFragmentManager();
+        //  final FragmentTransaction fT = fm.beginTransaction();
         switch (index) {
             case 0:
-                HeartRateFragment = new HeartRateFragment();
-                fT.add(R.id.mainFragment, HeartRateFragment);
-                isShowHeartRateFragment = true;
+//                HeartRateFragment = new HeartRateFragment();
+//                fT.add(R.id.mainFragment, HeartRateFragment);
+                // isShowHeartRateFragment = true;
+                getFragmentManager().popBackStack();
+                MainActivity.replaceFragment=new HeartRateFragment();
+                getFragmentManager().beginTransaction().hide(MainActivity.multiMediaFragment).addToBackStack(null)
+                        .add(R.id.mainFragment,MainActivity.replaceFragment).commit();
                 break;
         }
-        fT.commit();
+        //   fT.commit();
     }
     public void setTextViewColorAndShowUnderLineByIndex(View v){
 //        musicTextView.setTextColor(getResources().getColor(R.color.textNoSelect));

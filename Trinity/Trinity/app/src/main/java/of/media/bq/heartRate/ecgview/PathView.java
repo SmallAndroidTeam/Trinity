@@ -44,22 +44,14 @@ public class PathView extends View {
 
     public PathView(Context context) {
         super(context);
-
-        //this.mContext = context;
-      //  startDraw();
     }
 
     public PathView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-
-      //  this.mContext = context;
-      // startDraw();
     }
 
     public PathView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-      //  this.mContext = context;
-      //  startDraw();
     }
 
     @Override
@@ -76,7 +68,7 @@ public class PathView extends View {
     public void SetData(List<Integer> Data) {
         this.Data = Data;
         addData();
-       startDraw();
+        startDraw();
         invalidate();
     }
 
@@ -98,13 +90,11 @@ public class PathView extends View {
     }
 
     private void drawChart(Canvas canvas) {
-        Log.i("e", "eeeeeeeeeeeeeeeeeeeeeeeee "+mList.size());
-          //  float s = (float)Data.get(i) ;
-            linePath.moveTo(XPoint,toY(mList.get(0)));
-            for (int i = 1; i < mList.size(); i++) {
-                float toPointX = XPoint + i * degreeSpace;
-                float toPointY = toY(Data.get(i));
-                linePath.lineTo(toPointX, toPointY);
+        linePath.moveTo(XPoint,toY(mList.get(0)));
+        for (int i = 1; i < mList.size(); i++) {
+            float toPointX = XPoint + i * degreeSpace;
+            float toPointY = toY(Data.get(i));
+            linePath.lineTo(toPointX, toPointY);
         }
         canvas.drawPath(linePath,mPaint);
     }
@@ -124,32 +114,27 @@ public class PathView extends View {
     }
 
 
-  private void addData() {
+    private void addData() {
 
         if(index < Data.size()){
-         //   Log.i("aaa","aaaa  "+Data);
-
             mList.add(Data.get(index));
             invalidate();
-            Log.i("o", "oooooooooooooooooooooo"+mList.size());
-            Log.i("o", "oooooooooooooooooooooo"+mList.get(index));
+
             index++;
 
         }
-  }
-  Runnable mRunnable;
-  private void startDraw() {
-      Log.i("p", "pppppppppppppppppppppp");
-      mRunnable = new Runnable() {
-          @Override
-          public void run() {
-              Log.i("p", "pppppppppppppppppppppp");
-              addData();
-              mHandler.postDelayed(mRunnable,1000);
-          }
-      };
-      mHandler.post(mRunnable);
-  }
+    }
+    Runnable mRunnable;
+    private void startDraw() {
+        mRunnable = new Runnable() {
+            @Override
+            public void run() {
+                addData();
+                mHandler.postDelayed(mRunnable,1000);
+            }
+        };
+        mHandler.post(mRunnable);
+    }
 
 
     //根据xml的设定获取宽度

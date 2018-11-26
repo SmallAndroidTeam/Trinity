@@ -27,6 +27,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import of.media.bq.R;
+import of.media.bq.activity.MainActivity;
 import of.media.bq.heartRate.ecgview.PathView;
 import of.media.bq.heartRate.ecgview.TextBannerView;
 import of.media.bq.heartRate.MyDatabaseHelper;
@@ -61,7 +62,6 @@ public class HeartRateFragment extends Fragment {
     private int runCount = 0;// 全局变量，用于判断是否是第一次执行
     final Handler mHandler = new Handler();
     private TimerTask timerTask;
-    //  private SharedPreferencesHelper sharedPreferencesHelper;
     private String DataBase_Name = "heart.db";
     private String Table_Name = "heartrate";
     private MyDatabaseHelper mMyDatabaseHelper;
@@ -74,7 +74,6 @@ public class HeartRateFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_heart_rate, container, false);
         initView(view);
 
-        //  sharedPreferencesHelper  = new SharedPreferencesHelper(MainActivity.this,"data");
         mMyDatabaseHelper = new MyDatabaseHelper(getContext(), DataBase_Name, 1);
         loadData();
         getData();
@@ -145,6 +144,7 @@ public class HeartRateFragment extends Fragment {
 
     private void loadData() {
         int num[] = {375,900,310,800,300,600,300,700,300,900,600,250,900,400,711,500,200,600,300,800};
+
         // Random random = new Random();
         for (int i = 0; i < 20; i++) {
             // int num = random.nextInt(1000 - 375) + 375;
@@ -227,7 +227,6 @@ public class HeartRateFragment extends Fragment {
         for (int i = 0; i < data.size(); i++) {
             sum += data.get(i);
 
-            //  Log.i("b","aaaaaaaaaaaaaa"+sum);
         }
         sum = sum / data.size();
     }
@@ -267,13 +266,6 @@ public class HeartRateFragment extends Fragment {
                 mHeartRate.setText(Integer.toString(heartRate));
                 mHeartRate.setTextColor(Color.WHITE);
             }
-//            else if (message.what == 0) {
-//                Log.i("h", "hhhhhhhhhhhhhhhhh");
-//                getFragmentManager()
-//                        .beginTransaction()
-//                        .addToBackStack(null)  //将当前fragment加入到返回栈中
-//                        .replace(R.id.mainFragment, heartFragment).commit();
-//            }
             else  if(message.what == 0){
                 getHeartFragment();
             }
@@ -281,21 +273,19 @@ public class HeartRateFragment extends Fragment {
     };
 
     private void  getHeartFragment(){
-        final FragmentManager fragmentManager=getActivity().getSupportFragmentManager();
-        final FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-        hideHeartFragment(fragmentTransaction);
-
-//            fragmentTransaction.addToBackStack(null)  //将当前fragment加入到返回栈中
-//             .replace(R.id.mainFragment, heartFragment).commit();
-//            if(heartFragment==null){
-        heartFragment=new heartFragment();
-        fragmentTransaction.add(R.id.mainFragment,heartFragment);
-        flag = true;
-//            }else{
-//                fragmentTransaction.show(heartFragment);
+//        final FragmentManager fragmentManager=getActivity().getSupportFragmentManager();
+//        final FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+//        hideHeartFragment(fragmentTransaction);
 //
-//        }
-        fragmentTransaction.commit();
+//        heartFragment=new heartFragment();
+//        fragmentTransaction.add(R.id.mainFragment,heartFragment);
+//        flag = true;
+//        fragmentTransaction.commit();
+        MainActivity.flag=true;
+        getFragmentManager().popBackStack();
+        MainActivity.replaceFragment=new heartFragment();
+        getFragmentManager().beginTransaction()
+                .addToBackStack(null).hide(MainActivity.multiMediaFragment).add(R.id.mainFragment,MainActivity.replaceFragment).commit();
     }
 
     private void hideHeartFragment( FragmentTransaction fragmentTransaction){
