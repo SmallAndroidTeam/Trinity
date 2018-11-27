@@ -22,7 +22,7 @@ import of.media.bq.R;
 import of.media.bq.bean.Contact;
 
 import of.media.bq.saveData.BluetoothData;
-import of.media.bq.widget.BluetoothConstants;
+import of.media.bq.localInformation.BluetoothConstants;
 import of.media.bq.adapter.BluetoothContactAdapter;
 
 import java.util.List;
@@ -35,6 +35,8 @@ public class ContactsFragment extends Fragment {
     private FrameLayout fp_container;
     private BluetoothContactAdapter contactAdapter;
     private List<Contact> contactList;
+
+    private Contact currentContact;
 
     private LinearLayout contactInfoLayout;
 
@@ -99,6 +101,7 @@ public class ContactsFragment extends Fragment {
         filter.addAction(BluetoothConstants.INTENT_TO_ACTIVITY);
         getContext().registerReceiver(receiver, filter);
 
+        currentContact = null;
     }
 
     @Override
@@ -165,8 +168,10 @@ public class ContactsFragment extends Fragment {
         /* Dial button */
         dialButton = view.findViewById(R.id.contact_dial_button);
         dialButton.setOnClickListener(view1 -> {
-            String number = "10010";
-            sendToSerivce(BluetoothConstants.HFP_DIAL_REQ, number);
+            if((currentContact != null) && (currentContact.getNumber().length() > 0)) {
+                String number = currentContact.getNumber();
+                sendToSerivce(BluetoothConstants.HFP_DIAL, number);
+            }
         });
 
         tipsLayout = view.findViewById(R.id.contact_tips_layout);
@@ -194,7 +199,7 @@ public class ContactsFragment extends Fragment {
 
     private void setContactSected(int position) {
         contactAdapter.setSelectItem(position);
-        Contact currentContact = (Contact) contactAdapter.getItem(position);
+        currentContact = (Contact) contactAdapter.getItem(position);
         contactImg.setImageBitmap(currentContact.getPhoto());
         contactName.setText(currentContact.getName());
         contactNumber.setText(currentContact.getNumber());

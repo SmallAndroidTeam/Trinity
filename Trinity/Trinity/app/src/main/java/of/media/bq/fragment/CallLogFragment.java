@@ -22,7 +22,7 @@ import of.media.bq.R;
 import of.media.bq.bean.CallLog;
 
 import of.media.bq.saveData.BluetoothData;
-import of.media.bq.widget.BluetoothConstants;
+import of.media.bq.localInformation.BluetoothConstants;
 import of.media.bq.adapter.BluetoothCallLogAdapter;
 
 import java.util.List;
@@ -34,6 +34,8 @@ public class CallLogFragment extends Fragment {
     private FrameLayout fp_container;
     private BluetoothCallLogAdapter callLogAdapter;
     private List<CallLog> callLogList;
+
+    private CallLog currentCallLog;
 
     private LinearLayout callLogInfoLayout;
 
@@ -95,6 +97,8 @@ public class CallLogFragment extends Fragment {
         IntentFilter filter = new IntentFilter();
         filter.addAction(BluetoothConstants.INTENT_TO_ACTIVITY);
         getContext().registerReceiver(receiver, filter);
+
+        currentCallLog = null;
     }
 
     @Override
@@ -156,8 +160,10 @@ public class CallLogFragment extends Fragment {
         /* Dial button */
         dialButton = view.findViewById(R.id.contact_dial_button);
         dialButton.setOnClickListener(view1 -> {
-            String number = "10010";
-            sendToSerivce(BluetoothConstants.HFP_DIAL_REQ, number);
+            if((currentCallLog != null) && (currentCallLog.getNumber().length() > 0)) {
+                String number = currentCallLog.getNumber();
+                sendToSerivce(BluetoothConstants.HFP_DIAL, number);
+            }
         });
 
         downloadingView = view.findViewById(R.id.calllog_downloading);
@@ -184,7 +190,7 @@ public class CallLogFragment extends Fragment {
 
     private void setContactSected(int position) {
         callLogAdapter.setSelectItem(position);
-        CallLog currentCallLog = (CallLog) callLogAdapter.getItem(position);
+        currentCallLog = (CallLog) callLogAdapter.getItem(position);
         contactImg.setImageBitmap(currentCallLog.getPhoto());
         contactName.setText(currentCallLog.getName());
         contactNumber.setText(currentCallLog.getNumber());

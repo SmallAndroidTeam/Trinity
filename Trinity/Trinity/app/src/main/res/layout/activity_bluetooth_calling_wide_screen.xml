@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="right"
+    android:orientation="horizontal"
+    android:background="@drawable/background"
+    android:weightSum="3840" >
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1368"
+        android:visibility="invisible"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1104"
+        android:orientation="horizontal"
+        android:weightSum="1104">
+
+        <ImageView
+            android:id="@+id/calling_avatar"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="358"
+            android:src="@drawable/bt_contact_default_avatar" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="30px"
+            android:layout_weight="486"
+            android:orientation="vertical">
+
+            <!--  State field -->
+            <TextView
+                android:id="@+id/calling_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="拨号中"
+                android:textColor="@color/bt_text_normal"
+                android:textSize="@dimen/btTextSize" />
+
+            <!--  Name field -->
+            <TextView
+                android:id="@+id/calling_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10px"
+                android:gravity="center"
+                android:text="北落不吉"
+                android:textColor="@color/bt_text_main"
+                android:textSize="@dimen/btBigTextSize" />
+
+            <!--  Number field -->
+            <TextView
+                android:id="@+id/calling_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30px"
+                android:gravity="center"
+                android:text="186 2793 0537"
+                android:textColor="@color/bt_text_normal"
+                android:textSize="@dimen/btMiddleTextSize" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="260"
+            android:orientation="vertical">
+
+            <!--  Answer field -->
+            <ImageButton
+                android:id="@+id/calling_accept"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:selectableItemBackground"
+                android:gravity="center"
+                android:scaleType="fitCenter"
+                android:src="@drawable/bt_call_or_answer" />
+
+            <!--  Reject field -->
+            <ImageButton
+                android:id="@+id/calling_terminate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="96px"
+                android:background="?android:selectableItemBackground"
+                android:gravity="center"
+                android:scaleType="fitCenter"
+                android:src="@drawable/bt_terminate" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1368"
+        android:visibility="invisible"/>
+
+</LinearLayout>

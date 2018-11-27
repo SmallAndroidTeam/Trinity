@@ -20,7 +20,7 @@ import android.widget.TextView;
 import of.media.bq.R;
 import of.media.bq.bean.CallLog;
 import of.media.bq.saveData.BluetoothData;
-import of.media.bq.widget.BluetoothConstants;
+import of.media.bq.localInformation.BluetoothConstants;
 import of.media.bq.adapter.BluetoothCallLogAdapter;
 
 import java.util.List;
@@ -32,6 +32,8 @@ public class MissedCallFragment extends Fragment {
     private FrameLayout fp_container;
     private BluetoothCallLogAdapter missedCallAdapter;
     private List<CallLog> missedCallList;
+
+    private CallLog currentCallLog;
 
     private LinearLayout missedCallInfoLayout;
 
@@ -93,6 +95,8 @@ public class MissedCallFragment extends Fragment {
         IntentFilter filter = new IntentFilter();
         filter.addAction(BluetoothConstants.INTENT_TO_ACTIVITY);
         getContext().registerReceiver(receiver, filter);
+
+        currentCallLog = null;
     }
 
     @Override
@@ -154,8 +158,10 @@ public class MissedCallFragment extends Fragment {
         /* Dial button */
         dialButton = view.findViewById(R.id.contact_dial_button);
         dialButton.setOnClickListener(view1 -> {
-            String number = "10010";
-            sendToSerivce(BluetoothConstants.HFP_DIAL_REQ, number);
+            if((currentCallLog != null) && (currentCallLog.getNumber().length() > 0)) {
+                String number = currentCallLog.getNumber();
+                sendToSerivce(BluetoothConstants.HFP_DIAL, number);
+            }
         });
 
         downloadingView = view.findViewById(R.id.calllog_downloading);
@@ -181,7 +187,7 @@ public class MissedCallFragment extends Fragment {
 
     private void setContactSected(int position) {
         missedCallAdapter.setSelectItem(position);
-        CallLog currentCallLog = (CallLog) missedCallAdapter.getItem(position);
+        currentCallLog = (CallLog) missedCallAdapter.getItem(position);
         contactImg.setImageBitmap(currentCallLog.getPhoto());
         contactName.setText(currentCallLog.getName());
         contactNumber.setText(currentCallLog.getNumber());

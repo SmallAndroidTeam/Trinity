@@ -3,6 +3,7 @@ package of.media.bq.saveData;
 import java.util.ArrayList;
 import java.util.List;
 
+import of.media.bq.bean.Call;
 import of.media.bq.bean.CallLog;
 import of.media.bq.bean.Contact;
 
@@ -10,6 +11,8 @@ public class BluetoothData {
 
     private static boolean btEnabled = false;
     private static boolean hfpConnected = false;
+
+    private static Call currentCall = null;
 
     private static List<Contact> contactList = new ArrayList<>();
     private static List<CallLog> callLogList = new ArrayList<>();
@@ -28,6 +31,14 @@ public class BluetoothData {
 
     public static void setHfpConnected(boolean enabled){
         hfpConnected = enabled;
+    }
+
+    public static Call getCurrentCall() {
+        return currentCall;
+    }
+
+    public static void setCurrentCall(Call call) {
+        currentCall = call;
     }
 
     public static List<Contact> getContactList() {

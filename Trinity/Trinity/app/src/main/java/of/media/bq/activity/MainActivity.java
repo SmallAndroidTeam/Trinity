@@ -64,7 +64,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private TextView carweichatTv;
     private TextView returnTv;
     private RelativeLayout multiMediaRelativeLayout;
-    private RelativeLayout blueToothRelativeLayout;
+    private RelativeLayout bluetoothRelativeLayout;
     private RelativeLayout heartRateRelativeLayout;
     private RelativeLayout interiorViewRelativeLayout;
     private RelativeLayout outsideViewRelativeLayout;
@@ -116,7 +116,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         outsideviewTv=this.findViewById(R.id.tv_outsideview);
         returnTv=this.findViewById(R.id.tv_return);
         carweichatTv=this.findViewById(R.id.tv_carweichat);
-        blueToothRelativeLayout=this.findViewById(R.id.rl_bluetooth);
+        bluetoothRelativeLayout =this.findViewById(R.id.rl_bluetooth);
         heartRateRelativeLayout=this.findViewById(R.id.rl_heartrate);
         interiorViewRelativeLayout=this.findViewById(R.id.rl_interiorview);
         outsideViewRelativeLayout=this.findViewById(R.id.rl_outsideview);
@@ -153,7 +153,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 setTextViewAlphaChange(multiMediaButton);
                 multiMediaButton.setTextColor(getResources().getColor(R.color.textSelect));
                 multiMediaRelativeLayout.setVisibility(View.VISIBLE);
-                blueToothRelativeLayout.setVisibility(View.INVISIBLE);
+                bluetoothRelativeLayout.setVisibility(View.INVISIBLE);
                 heartRateRelativeLayout.setVisibility(View.INVISIBLE);
                 interiorViewRelativeLayout.setVisibility(View.INVISIBLE);
                 outsideViewRelativeLayout.setVisibility(View.INVISIBLE);
@@ -169,7 +169,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             case R.id.tv_bluetooth:
                 setTextViewAlphaChange(bluetoothTv);
                 bluetoothTv.setTextColor(getResources().getColor(R.color.textSelect));
-                blueToothRelativeLayout.setVisibility(View.VISIBLE);
+                bluetoothRelativeLayout.setVisibility(View.VISIBLE);
                 multiMediaRelativeLayout.setVisibility(View.INVISIBLE);
                 heartRateRelativeLayout.setVisibility(View.INVISIBLE);
                 interiorViewRelativeLayout.setVisibility(View.INVISIBLE);
@@ -187,7 +187,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 setTextViewAlphaChange(heartrateTv);
                 heartrateTv.setTextColor(getResources().getColor(R.color.textSelect));
                 multiMediaRelativeLayout.setVisibility(View.INVISIBLE);
-                blueToothRelativeLayout.setVisibility(View.INVISIBLE);
+                bluetoothRelativeLayout.setVisibility(View.INVISIBLE);
                 heartRateRelativeLayout.setVisibility(View.VISIBLE);
                 interiorViewRelativeLayout.setVisibility(View.INVISIBLE);
                 outsideViewRelativeLayout.setVisibility(View.INVISIBLE);
@@ -210,7 +210,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 setTextViewAlphaChange(interiorviewTv);
                 interiorviewTv.setTextColor(getResources().getColor(R.color.textSelect));
                 multiMediaRelativeLayout.setVisibility(View.INVISIBLE);
-                blueToothRelativeLayout.setVisibility(View.INVISIBLE);
+                bluetoothRelativeLayout.setVisibility(View.INVISIBLE);
                 heartRateRelativeLayout.setVisibility(View.INVISIBLE);
                 interiorViewRelativeLayout.setVisibility(View.VISIBLE);
                 outsideViewRelativeLayout.setVisibility(View.INVISIBLE);
@@ -227,7 +227,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 setTextViewAlphaChange(outsideviewTv);
                 outsideviewTv.setTextColor(getResources().getColor(R.color.textSelect));
                 multiMediaRelativeLayout.setVisibility(View.INVISIBLE);
-                blueToothRelativeLayout.setVisibility(View.INVISIBLE);
+                bluetoothRelativeLayout.setVisibility(View.INVISIBLE);
                 heartRateRelativeLayout.setVisibility(View.INVISIBLE);
                 interiorViewRelativeLayout.setVisibility(View.INVISIBLE);
                 outsideViewRelativeLayout.setVisibility(View.VISIBLE);
@@ -244,7 +244,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 setTextViewAlphaChange(carweichatTv);
                 carweichatTv.setTextColor(getResources().getColor(R.color.textSelect));
                 multiMediaRelativeLayout.setVisibility(View.INVISIBLE);
-                blueToothRelativeLayout.setVisibility(View.INVISIBLE);
+                bluetoothRelativeLayout.setVisibility(View.INVISIBLE);
                 heartRateRelativeLayout.setVisibility(View.INVISIBLE);
                 interiorViewRelativeLayout.setVisibility(View.INVISIBLE);
                 outsideViewRelativeLayout.setVisibility(View.INVISIBLE);
@@ -261,7 +261,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 setTextViewAlphaChange(returnTv);
                 returnTv.setTextColor(getResources().getColor(R.color.textSelect));
                 multiMediaRelativeLayout.setVisibility(View.INVISIBLE);
-                blueToothRelativeLayout.setVisibility(View.INVISIBLE);
+                bluetoothRelativeLayout.setVisibility(View.INVISIBLE);
                 heartRateRelativeLayout.setVisibility(View.INVISIBLE);
                 interiorViewRelativeLayout.setVisibility(View.INVISIBLE);
                 outsideViewRelativeLayout.setVisibility(View.INVISIBLE);

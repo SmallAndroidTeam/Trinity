@@ -21,7 +21,7 @@ import android.widget.TextView;
 import of.media.bq.R;
 
 import of.media.bq.saveData.BluetoothData;
-import of.media.bq.widget.BluetoothConstants;
+import of.media.bq.localInformation.BluetoothConstants;
 
 public class DialpadFragment extends Fragment implements View.OnClickListener, View.OnLongClickListener{
 
@@ -232,7 +232,7 @@ public class DialpadFragment extends Fragment implements View.OnClickListener, V
      * Adds number formatting to the field
      */
     private void addNumberFormatting() {
-        phoneNumber.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+        phoneNumber.addTextChangedListener(new PhoneNumberFormattingTextWatcher("CN"));
     }
 
     /**
@@ -354,10 +354,10 @@ public class DialpadFragment extends Fragment implements View.OnClickListener, V
      * Starts the bt dial action
      */
     private void dialNumber() {
-        String number = phoneNumber.getText().toString();
+        String number = phoneNumber.getText().toString().replaceAll(" ", "");
         if (number.length() > 0) {
             Log.d(TAG, "dialNumber " + number);
-            sendToService(BluetoothConstants.HFP_DIAL_REQ, number);
+            sendToService(BluetoothConstants.HFP_DIAL, number);
         }
     }
 

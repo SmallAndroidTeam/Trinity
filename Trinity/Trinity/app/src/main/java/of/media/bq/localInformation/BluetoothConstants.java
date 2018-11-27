@@ -1,4 +1,4 @@
-package of.media.bq.widget;
+package of.media.bq.localInformation;
 
 /**
  * Various strings used to identify operations or data in the Bluetooth service
@@ -17,7 +17,9 @@ public interface BluetoothConstants {
     /*
      * Activity ==> Service
      */
-    String HFP_DIAL_REQ             = "hfp_dial_req";
+    String HFP_DIAL                 = "hfp_dial";
+    String HFP_ACCEPT               = "hfp_accept";
+    String HFP_TERMINATE            = "hfp_terminate";
     String PBAP_DOWNLOAD_PHONEBOOK  = "pbap_download_phonebook";
     String PBAP_DOWNLOAD_CALLLOG    = "pbap_download_calllog";
 
@@ -27,16 +29,22 @@ public interface BluetoothConstants {
     String BT_STATUS_CHANGE       = "bt_status_change";
     String HFP_STATUS_CHANGE      = "hfp_status_change";
     String PBAP_DOWNLOAD_UPDATE   = "pbap_download_update";
+    String BT_CALLING_UPDATE      = "bt_calling_update";
 
 
+    /* Arg for BT_STATUS_CHANGE */
     String STATUS_ON   = "status_on";
     String STATUS_OFF  = "status_off";
 
+    /* Arg for PBAP_DOWNLOAD_UPDATE */
     String DOWNLOAD_PB_START     = "download_pb_start";
     String DOWNLOAD_Pb_FINISHED  = "download_pb_finished";
     String DOWNLOAD_CL_START     = "download_cl_start";
     String DOWNLOAD_CL_FINISHED  = "download_cl_finished";
 
+    /* Arg for BT_CALLING_UPDATE */
+    String CALLING_UI_UPDATE     = "calling_ui_update";
+    String CALLING_UI_FINISHED   = "calling_ui_finished";
 
     /*
      *  Common used by Activity

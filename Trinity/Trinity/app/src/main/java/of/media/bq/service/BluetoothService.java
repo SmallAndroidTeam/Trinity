@@ -26,11 +26,13 @@ import android.util.Log;
 
 import of.media.bq.R;
 
+import of.media.bq.activity.BluetoothCallingActivity;
+import of.media.bq.bean.Call;
 import of.media.bq.bean.CallLog;
 import of.media.bq.bean.Contact;
 
 import of.media.bq.saveData.BluetoothData;
-import of.media.bq.widget.BluetoothConstants;
+import of.media.bq.localInformation.BluetoothConstants;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -46,6 +48,10 @@ public class BluetoothService extends Service {
 
     final int HEADSET_CLIENT = 16;
     final int PBAP_CLIENT = 17;
+
+    final int CALLING_ACTIVITY_START  = 1;
+    final int CALLING_ACTIVITY_UPDATE = 2;
+    final int CALLING_ACTIVITY_STOP   = 3;
 
     /* bluetooth stuff */
     private BluetoothAdapter bluetoothAdapter = null;
@@ -69,6 +75,7 @@ public class BluetoothService extends Service {
                     int state = bluetoothHeadsetClient.getConnectionState(bluetoothDevice);
                     /* Should always enter */
                     if (state == BluetoothProfile.STATE_CONNECTED) {
+                        Log.d(TAG, "HFP is connected");
                         BluetoothData.setHfpConnected(true);
                         for (BluetoothHeadsetClientCall call : bluetoothHeadsetClient.getCurrentCalls(bluetoothDevice)) {
                             // FIXME: Notify UI ongoing call
@@ -90,6 +97,7 @@ public class BluetoothService extends Service {
             if (profile == HEADSET_CLIENT) {
                 bluetoothHeadsetClient = null;
                 bluetoothDevice = null;
+                BluetoothData.setHfpConnected(false);
             } else if (profile == PBAP_CLIENT) {
                 bluetoothPbapClient = null;
             }
@@ -140,6 +148,10 @@ public class BluetoothService extends Service {
                             sendToActivity(BluetoothConstants.HFP_STATUS_CHANGE, BluetoothConstants.STATUS_OFF);
                             break;
                     }
+                    break;
+                case BluetoothHeadsetClient.ACTION_CALL_CHANGED:
+                    BluetoothHeadsetClientCall call = intent.getParcelableExtra(BluetoothHeadsetClient.EXTRA_CALL);
+                    callChangedCallback(call);
                     break;
                 case BluetoothPbapClient.ACTION_CONNECTION_STATE_CHANGED:
                     prevState = intent.getIntExtra(BluetoothProfile.EXTRA_PREVIOUS_STATE, 0);
@@ -207,7 +219,29 @@ public class BluetoothService extends Service {
                     String arg2 = intent.getStringExtra(BluetoothConstants.ARG2);
                     Log.d(TAG, "Message from service: " + arg1 + "/" + arg2);
 
-                    if (arg1.equals(BluetoothConstants.PBAP_DOWNLOAD_PHONEBOOK)) {
+                    if (arg1.equals(BluetoothConstants.HFP_DIAL)) {
+                        Log.d(TAG, "Dial " + arg2);
+                        if ((arg2 != null) && (arg2.length() > 0)) {
+                            bluetoothHeadsetClient.dial(bluetoothDevice, arg2);
+                        }
+                    }
+                    else if (arg1.equals(BluetoothConstants.HFP_ACCEPT)) {
+                        bluetoothHeadsetClient.acceptCall(bluetoothDevice, BluetoothHeadsetClient.CALL_ACCEPT_NONE);
+                    }
+                    else if (arg1.equals(BluetoothConstants.HFP_TERMINATE)) {
+                        Call savedCall = BluetoothData.getCurrentCall();
+                        if (savedCall.getState() == BluetoothHeadsetClientCall.CALL_STATE_INCOMING) {
+                            bluetoothHeadsetClient.rejectCall(bluetoothDevice);
+                        }
+                        else if (savedCall.getState() == BluetoothHeadsetClientCall.CALL_STATE_HELD) {
+                            // FixMe: No API for this.
+                        }
+                        else {
+                            // Works for DIALING/ALERTING/ACTIVE
+                            bluetoothHeadsetClient.terminateCall(bluetoothDevice, null);
+                        }
+                    }
+                    else if (arg1.equals(BluetoothConstants.PBAP_DOWNLOAD_PHONEBOOK)) {
                         int pbapStatus = bluetoothPbapClient.getConnectionState(bluetoothDevice);
                         Log.d(TAG, "PBAP download required, current pbap status is " + pbapStatus);
                         if ((pbapStatus == BluetoothProfile.STATE_DISCONNECTED) || (pbapStatus == BluetoothProfile.STATE_DISCONNECTING)) {
@@ -246,13 +280,14 @@ public class BluetoothService extends Service {
 
         /* The first time get the bluetooth status */
         BluetoothData.setBTEnabled(bluetoothAdapter.isEnabled());
-        Log.d(TAG, "Bluetooth is enabled?" + bluetoothAdapter.isEnabled());
+        Log.d(TAG, "Bluetooth is enabled/" + bluetoothAdapter.isEnabled());
         bluetoothAdapter.getProfileProxy(getApplicationContext(), profileListener, HEADSET_CLIENT);
         bluetoothAdapter.getProfileProxy(getApplicationContext(), profileListener, PBAP_CLIENT);
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
         filter.addAction(BluetoothHeadsetClient.ACTION_CONNECTION_STATE_CHANGED);
+        filter.addAction(BluetoothHeadsetClient.ACTION_CALL_CHANGED);
         filter.addAction(BluetoothPbapClient.ACTION_CONNECTION_STATE_CHANGED);
         filter.addAction(BluetoothPbapClient.ACTION_SYNC_STATE_CHANGED);
         filter.addAction(BluetoothConstants.INTENT_TO_SERVICE);
@@ -262,7 +297,6 @@ public class BluetoothService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "onStartCommand");
-        doBackgroundWork(true, true);
         return START_STICKY;
     }
 
@@ -272,6 +306,84 @@ public class BluetoothService extends Service {
         Log.d(TAG, "onDestroy");
 
         unregisterReceiver(receiver);
+    }
+
+    private void callChangedCallback(BluetoothHeadsetClientCall call) {
+        int state = call.getState();
+        String number = call.getNumber().trim();
+        long creationTime = call.getCreationElapsedMilli();
+
+        if (number.isEmpty() || (!bluetoothDevice.equals(call.getDevice()))) {
+            return;
+        }
+
+        Log.d(TAG, "Number is " + number + ", state is " + state + ", creationTime is " + creationTime);
+
+        if (state == BluetoothHeadsetClientCall.CALL_STATE_TERMINATED) {
+            /* call is end */
+            BluetoothData.setCurrentCall(null);
+            updateCallingActivity(CALLING_ACTIVITY_STOP);
+        }
+        else {
+            /* Call is on-going */
+            Call savedCall = BluetoothData.getCurrentCall();
+            if (savedCall == null) {
+                savedCall = new Call();
+
+                /* Number */
+                savedCall.setNumber(number);
+
+                /* Name */
+                List<Contact> contactList = BluetoothData.getContactList();
+                boolean found = false;
+                for(Contact contact:contactList){
+                    List<String> numberList = contact.getNumberList();
+                    if ((numberList != null) && numberList.contains(number)) {
+                        savedCall.setName(contact.getName());
+                        savedCall.setPhoto(contact.getPhoto());
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    savedCall.setName(number);
+                }
+
+                /* State */
+                savedCall.setState(state);
+
+                BluetoothData.setCurrentCall(savedCall);
+                updateCallingActivity(CALLING_ACTIVITY_START);
+            }
+            else {
+                /* Compare what's the change */
+                if((savedCall.getState() != state) || (!savedCall.getNumber().equals(number))) {
+                    savedCall.setState(state);
+                    savedCall.setNumber(number);
+                    BluetoothData.setCurrentCall(savedCall);
+                    updateCallingActivity(CALLING_ACTIVITY_UPDATE);
+                }
+            }
+        }
+    }
+
+    private void updateCallingActivity(int status) {
+        if (status == CALLING_ACTIVITY_START) {
+            Log.d(TAG, "Start Calling Activity.");
+            Intent intent = new Intent(this, BluetoothCallingActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+        else if (status == CALLING_ACTIVITY_UPDATE){
+            Log.d(TAG, "Update Calling Activity.");
+            sendToActivity(BluetoothConstants.BT_CALLING_UPDATE, BluetoothConstants.CALLING_UI_UPDATE);
+
+        }
+        else if (status == CALLING_ACTIVITY_STOP){
+            Log.d(TAG, "Stop Calling Activity.");
+            sendToActivity(BluetoothConstants.BT_CALLING_UPDATE, BluetoothConstants.CALLING_UI_FINISHED);
+        }
+
     }
 
     private void sendToActivity(String arg1, String arg2) {
@@ -305,8 +417,6 @@ public class BluetoothService extends Service {
 
         Log.d(TAG, "getContactList");
 
-        //String address = "C0:EE:FB:F1:EA:C7";
-        //Account account = new Account(address, getString(R.string.pbap_account_type));
         Account account = new Account(bluetoothDevice.getAddress(), getString(R.string.pbap_account_type));
         Uri uri = RawContacts.CONTENT_URI.buildUpon()
                 .appendQueryParameter(RawContacts.ACCOUNT_NAME, account.name)

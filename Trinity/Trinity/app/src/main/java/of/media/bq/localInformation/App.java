@@ -2,9 +2,13 @@ package of.media.bq.localInformation;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
+
+import of.media.bq.service.BluetoothService;
 
 /**
  * 2015年8月15日 16:34:37
@@ -25,6 +29,11 @@ public class App extends Application {
 		wm.getDefaultDisplay().getMetrics(dm);
 		sScreenWidth = dm.widthPixels;
 		sScreenHeight = dm.heightPixels;
+
+        /*
+         *  FIXME: Service will be destroyed when UI goes to background
+         */
+		Intent service = new Intent(this, BluetoothService.class);
+		startService(service);
 	}
-	
 }

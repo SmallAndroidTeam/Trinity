@@ -1,30 +1,28 @@
 package of.media.bq.bean;
 
+
 import android.graphics.Bitmap;
 
-public class CallLog {
+public class Call {
     private String name;
     private String number;
-    private String timestamp;
+    private int state;
     private String duration;
-    private int type;
     private Bitmap photo;
 
-    public CallLog() {
+    public Call() {
         this.name = null;
         this.number = null;
-        this.timestamp = null;
+        this.state = 0;
         this.duration = null;
-        this.type = 0;
         this.photo = null;
     }
 
-    public CallLog(String name, String number, String timestamp, String duration, int type, Bitmap photo) {
+    public Call(String name, String number, int state, String duration, Bitmap photo) {
         this.name = name;
         this.number = number;
-        this.timestamp = timestamp;
+        this.state = state;
         this.duration = duration;
-        this.type = type;
         this.photo = photo;
     }
 
@@ -33,8 +31,6 @@ public class CallLog {
         return "Contact{" +
                 "name='" + name + '\'' +
                 ", number='" + number + '\'' +
-                ", type='" + type + '\'' +
-                ", timestamp='" + timestamp + '\'' +
                 ", duration='" + duration + '\'' +
                 '}';
     }
@@ -55,14 +51,6 @@ public class CallLog {
         this.number = number;
     }
 
-    public String getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
-    }
-
     public String getDuration() {
         return duration;
     }
@@ -71,19 +59,19 @@ public class CallLog {
         this.duration = duration;
     }
 
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
-
     public Bitmap getPhoto() {
         return photo;
     }
 
     public void setPhoto(Bitmap photo) {
         this.photo = photo;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
     }
 }
