@@ -79,6 +79,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private ImageView bgmenu;
     public static   Fragment replaceFragment;
     public  static  boolean flag=false;
+    private  static  boolean  start=false;//用于判断app是否启动
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,9 +91,18 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         initEvents();
         initShowFragment();
         App.sContext=this;
+        start=true;
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        start=false;
+    }
 
+    public static boolean isStart() {//判断app是否启动
+        return start;
+    }
 
     private void initShowFragment() {
         multiMediaButton.callOnClick();
@@ -195,14 +205,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 returnRelativeLayout.setVisibility(View.INVISIBLE);
 
                 if(heartRateFragment==null){
-                    heartRateFragment=new HeartRateFragment();
+                    heartRateFragment=new heartFragment();
                     fragmentTransaction.
                             addToBackStack(null)
                             .add(R.id.mainFragment,heartRateFragment);
-                }else{
+                }else {
                     if(flag){
                         fragmentTransaction.show(replaceFragment);
-                    }else {
+                    }else
+                    {
                         fragmentTransaction.show(heartRateFragment);
                     }}
                 break;

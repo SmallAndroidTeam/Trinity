@@ -1,6 +1,7 @@
 package of.media.bq.fragment;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -32,8 +34,9 @@ import of.media.bq.heartRate.ecgview.PathView;
 import of.media.bq.heartRate.ecgview.TextBannerView;
 import of.media.bq.heartRate.MyDatabaseHelper;
 import of.media.bq.heartRate.fragment.heartFragment;
+import of.media.bq.service.HeartrateService;
 
-public class HeartRateFragment extends Fragment {
+public class HeartRateFragment extends Fragment implements HeartrateService.TransmissionData {
     public PathView pathView;
 
     private TextView mHeartRate;
@@ -123,6 +126,12 @@ public class HeartRateFragment extends Fragment {
             while (cursor.moveToNext());
         }
         cursor.close();
+        HeartrateService.setmTransmissionData(this);
+
+        //开启服务接收心率检测数据
+        Intent intent=new Intent(Objects.requireNonNull(getActivity()), HeartrateService.class);
+        intent.setAction(HeartrateService.GET_HERET_STATUS);
+        getActivity().startService(intent);
         return view;
     }
 
@@ -288,11 +297,11 @@ public class HeartRateFragment extends Fragment {
                 .addToBackStack(null).hide(MainActivity.multiMediaFragment).add(R.id.mainFragment,MainActivity.replaceFragment).commit();
     }
 
-    private void hideHeartFragment( FragmentTransaction fragmentTransaction){
-        if(heartFragment!=null){
-            fragmentTransaction.remove(heartFragment);
-        }
-    }
+    //    private void hideHeartFragment( FragmentTransaction fragmentTransaction){
+//        if(heartFragment!=null){
+//            fragmentTransaction.remove(heartFragment);
+//        }
+//    }
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -300,6 +309,10 @@ public class HeartRateFragment extends Fragment {
             mMyDatabaseHelper.close();
     }
 
+    @Override
+    public void getData(int data) {
+        Log.i("bq11", "getData: "+data);
+    }
 }
 
 

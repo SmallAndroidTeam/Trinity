@@ -1,5 +1,6 @@
 package of.media.bq.heartRate.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,9 +16,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import java.util.Objects;
+
 import of.media.bq.R;
 import of.media.bq.activity.MainActivity;
 import of.media.bq.fragment.HeartRateFragment;
+import of.media.bq.service.HeartrateService;
+
 /**
  * Create By rongxinglan IN 2018/11/8
  */
@@ -57,13 +62,7 @@ public class heartFragment extends Fragment implements  View.OnClickListener{
         testAgain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.Test_again:
-                        setTab(0);
-                        break;
-                    default:
-                        break;
-                }
+                setTab(0);
             }
         });
     }
@@ -120,12 +119,12 @@ public class heartFragment extends Fragment implements  View.OnClickListener{
 //                fT.add(R.id.mainFragment, HeartRateFragment);
                 // isShowHeartRateFragment = true;
                 getFragmentManager().popBackStack();
+                MainActivity.flag =true;
                 MainActivity.replaceFragment=new HeartRateFragment();
                 getFragmentManager().beginTransaction().hide(MainActivity.multiMediaFragment).addToBackStack(null)
                         .add(R.id.mainFragment,MainActivity.replaceFragment).commit();
                 break;
         }
-        //   fT.commit();
     }
     public void setTextViewColorAndShowUnderLineByIndex(View v){
 //        musicTextView.setTextColor(getResources().getColor(R.color.textNoSelect));
@@ -173,7 +172,7 @@ public class heartFragment extends Fragment implements  View.OnClickListener{
             fragmentTransaction.remove(WeekFragment);
         }
         if (HeartRateFragment != null) {
-            fragmentTransaction.remove(HeartRateFragment);
+            fragmentTransaction.hide(HeartRateFragment);
         }
     }
 }

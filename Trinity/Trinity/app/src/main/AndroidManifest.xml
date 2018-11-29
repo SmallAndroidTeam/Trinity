@@ -92,6 +92,15 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name="of.media.bq.broadcastReceiver.HeartRateReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="ofilm.intent.action.HEARTRATE_EVENT"/>
+                <action android:name="ofilm.intent.action.HEARTRATE_SUSPEND"/>
+            </intent-filter>
+        </receiver>
+        <service android:name=".service.HeartrateService" android:exported="true" android:enabled="true"/>
+
     </application>
 
 </manifest>
