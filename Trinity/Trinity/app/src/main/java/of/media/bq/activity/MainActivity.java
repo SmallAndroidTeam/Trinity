@@ -11,6 +11,7 @@ import of.media.bq.heartRate.fragment.heartFragment;
 import of.media.bq.localInformation.App;
 
 import android.annotation.SuppressLint;
+import android.hardware.radio.ProgramSelector;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
@@ -80,6 +81,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public static   Fragment replaceFragment;
     public  static  boolean flag=false;
     private  static  boolean  start=false;//用于判断app是否启动
+    public  static  int ID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,11 +147,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
+        ID=0;
         Fade fade=new Fade();
         fade.setDuration(500);
         TransitionSet transitionSet=new TransitionSet().addTransition(fade);
         TransitionManager.beginDelayedTransition((ViewGroup) bgmenu.getParent(),transitionSet);
-
         final  FragmentManager fragmentManager=getSupportFragmentManager();
         final  FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
         hideAllFragment(fragmentTransaction);
@@ -194,6 +196,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 }
                 break;
             case R.id.tv_heartrate:
+                ID=1;
                 setTextViewAlphaChange(heartrateTv);
                 heartrateTv.setTextColor(getResources().getColor(R.color.textSelect));
                 multiMediaRelativeLayout.setVisibility(View.INVISIBLE);
@@ -204,18 +207,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 carWeiChatRelativeLayout.setVisibility(View.INVISIBLE);
                 returnRelativeLayout.setVisibility(View.INVISIBLE);
 
-                if(heartRateFragment==null){
-                    heartRateFragment=new heartFragment();
+                if(replaceFragment==null){
+                    replaceFragment=new heartFragment();
+
                     fragmentTransaction.
                             addToBackStack(null)
-                            .add(R.id.mainFragment,heartRateFragment);
+                            .add(R.id.mainFragment,replaceFragment);
                 }else {
-                    if(flag){
-                        fragmentTransaction.show(replaceFragment);
-                    }else
-                    {
-                        fragmentTransaction.show(heartRateFragment);
-                    }}
+
+                    fragmentTransaction.show(replaceFragment);
+                  }
                 break;
             case R.id.tv_interiorview:
                 setTextViewAlphaChange(interiorviewTv);

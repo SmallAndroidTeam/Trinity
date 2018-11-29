@@ -119,7 +119,6 @@ public class heartFragment extends Fragment implements  View.OnClickListener{
 //                fT.add(R.id.mainFragment, HeartRateFragment);
                 // isShowHeartRateFragment = true;
                 getFragmentManager().popBackStack();
-                MainActivity.flag =true;
                 MainActivity.replaceFragment=new HeartRateFragment();
                 getFragmentManager().beginTransaction().hide(MainActivity.multiMediaFragment).addToBackStack(null)
                         .add(R.id.mainFragment,MainActivity.replaceFragment).commit();

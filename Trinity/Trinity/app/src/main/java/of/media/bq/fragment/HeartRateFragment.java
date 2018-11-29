@@ -70,7 +70,6 @@ public class HeartRateFragment extends Fragment implements HeartrateService.Tran
     private MyDatabaseHelper mMyDatabaseHelper;
     public static   Fragment heartFragment ;
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -276,7 +275,16 @@ public class HeartRateFragment extends Fragment implements HeartrateService.Tran
                 mHeartRate.setTextColor(Color.WHITE);
             }
             else  if(message.what == 0){
+                if(MainActivity.ID==1){
                 getHeartFragment();
+
+                }
+                else {
+                    getFragmentManager().popBackStack();
+                    MainActivity.replaceFragment=new heartFragment();
+                    getFragmentManager().beginTransaction()
+                            .addToBackStack(null).hide(MainActivity.multiMediaFragment).add(R.id.mainFragment,MainActivity.replaceFragment).hide(MainActivity.replaceFragment).commit();
+                }
             }
         }
     };
@@ -290,7 +298,6 @@ public class HeartRateFragment extends Fragment implements HeartrateService.Tran
 //        fragmentTransaction.add(R.id.mainFragment,heartFragment);
 //        flag = true;
 //        fragmentTransaction.commit();
-        MainActivity.flag=true;
         getFragmentManager().popBackStack();
         MainActivity.replaceFragment=new heartFragment();
         getFragmentManager().beginTransaction()

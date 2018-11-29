@@ -131,6 +131,7 @@ public class PathView extends View {
             public void run() {
                 addData();
                 mHandler.postDelayed(mRunnable,1000);
+
             }
         };
         mHandler.post(mRunnable);
