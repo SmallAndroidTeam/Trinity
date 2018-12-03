@@ -235,43 +235,33 @@ public class LocalMusicFragment extends Fragment implements View.OnTouchListener
     
     //根据下标设置图片专辑显示的图片
     public void setMusicAlbumPosition(int position){
-        Animation animationAlpha=new AlphaAnimation(1f,1f);
-        Animation animationAlpha1=new AlphaAnimation(0.5f,0.5f);
-        animationAlpha.setDuration(0);
-        animationAlpha.setFillAfter(true);
-        animationAlpha1.setFillAfter(true);
-        animationAlpha1.setDuration(0);
-        currentMusicImageview.startAnimation(animationAlpha);
-        prevMusicImageview.startAnimation(animationAlpha1);
-        nextMusicImageview.startAnimation(animationAlpha1);
-        
         if(position==-1){//没有音乐
             OneToast.showMessage(getContext(),"没有音乐");
             currentMusicImageview.setVisibility(View.VISIBLE);
             prevMusicImageview.setVisibility(View.INVISIBLE);
             nextMusicImageview.setVisibility(View.INVISIBLE);
-            
+            setMusicAlbumAlpha();
+            setMusicAlbum(currentMusicImageview,null);
         }else if(position>MusicService.getMusicSize()-1){//下标超过最大值不执行任何操作
         
         }
         else if(MusicService.getMusicSize()==1){
-            
+            prevMusicImageview.setVisibility(View.INVISIBLE);
             currentMusicImageview.setVisibility(View.VISIBLE);
             nextMusicImageview.setVisibility(View.INVISIBLE);
+            setMusicAlbumAlpha();
             setMusicAlbum(currentMusicImageview,MusicService.getMusicList().get(position).getImage());
             final AnimationSet animationSet= (AnimationSet) AnimationUtils.loadAnimation(getContext(),R.anim.music_album_change);
             currentMusicImageview.startAnimation(animationSet);
         }else if(MusicService.getMusicSize()==2){
             currentMusicImageview.setVisibility(View.VISIBLE);
-
-
             setMusicAlbum(currentMusicImageview,MusicService.getMusicList().get(position).getImage());
-
             prevMusicImageview.setVisibility(View.VISIBLE);
             nextMusicImageview.setVisibility(View.INVISIBLE);
             int preIndex=position<=0?1:position-1;
 
             setMusicAlbum(prevMusicImageview,MusicService.getMusicList().get(preIndex).getImage());
+            setMusicAlbumAlpha();
             final AnimationSet animationSet= (AnimationSet) AnimationUtils.loadAnimation(getContext(),R.anim.music_album_change);
             currentMusicImageview.startAnimation(animationSet);
             
@@ -281,7 +271,6 @@ public class LocalMusicFragment extends Fragment implements View.OnTouchListener
             currentMusicImageview.setVisibility(View.VISIBLE);
             prevMusicImageview.setVisibility(View.VISIBLE);
             nextMusicImageview.setVisibility(View.VISIBLE);
-            
             int size=MusicService.getMusicSize();
             int prevPostion=position==0?size-1:position-1;
             int nextPostion=(position>=(size-1))?0:position+1;
@@ -289,7 +278,7 @@ public class LocalMusicFragment extends Fragment implements View.OnTouchListener
             setMusicAlbum(prevMusicImageview,MusicService.getMusicList().get(prevPostion).getImage());
             setMusicAlbum(currentMusicImageview,MusicService.getMusicList().get(position).getImage());
             setMusicAlbum(nextMusicImageview,MusicService.getMusicList().get(nextPostion).getImage());
-
+            setMusicAlbumAlpha();
             final AnimationSet animationSet= (AnimationSet) AnimationUtils.loadAnimation(getContext(),R.anim.music_album_change);
             currentMusicImageview.startAnimation(animationSet);
 
@@ -316,7 +305,27 @@ public class LocalMusicFragment extends Fragment implements View.OnTouchListener
         }
 
     }
-
+    
+    /**
+     * 设置专辑图片的透明度
+     */
+    private void setMusicAlbumAlpha(){
+        
+        Animation animationAlpha=new AlphaAnimation(1f,1f);
+        Animation animationAlpha1=new AlphaAnimation(0.5f,0.5f);
+        animationAlpha.setDuration(0);
+        animationAlpha.setFillAfter(true);
+        animationAlpha1.setFillAfter(true);
+        animationAlpha1.setDuration(0);
+        if(currentMusicImageview.getVisibility()==View.VISIBLE)
+            currentMusicImageview.startAnimation(animationAlpha);
+        
+        if(prevMusicImageview.getVisibility()==View.VISIBLE)
+            prevMusicImageview.startAnimation(animationAlpha1);
+        
+        if(nextMusicImageview.getVisibility()==View.VISIBLE)
+            nextMusicImageview.startAnimation(animationAlpha1);
+    }
     @Override
     public void onClick(View view) {
         if(!MusicService.isExistMusics()){
