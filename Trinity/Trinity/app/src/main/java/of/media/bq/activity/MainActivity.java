@@ -1,6 +1,7 @@
 package of.media.bq.activity;
 
 import of.media.bq.R;
+import of.media.bq.broadcastReceiver.MusicReceiver;
 import of.media.bq.fragment.BluetoothFragment;
 import of.media.bq.fragment.CarWeiChatFragment;
 import of.media.bq.fragment.HeartRateFragment;
@@ -11,6 +12,7 @@ import of.media.bq.heartRate.fragment.heartFragment;
 import of.media.bq.localInformation.App;
 
 import android.annotation.SuppressLint;
+import android.content.IntentFilter;
 import android.hardware.radio.ProgramSelector;
 import android.os.Handler;
 import android.os.Message;
@@ -94,6 +96,30 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         initShowFragment();
         App.sContext=this;
         start=true;
+        IntentFilter intentFilter=new IntentFilter();
+        intentFilter.addAction("music.play");
+        intentFilter.addAction("music.prev");
+        intentFilter.addAction("music.next");
+        intentFilter.addAction("music.pause");
+        intentFilter.addAction("music.start");
+        intentFilter.addAction("music.open");
+        intentFilter.addAction("music.close");
+        intentFilter.addAction("music.continue");
+        intentFilter.addAction("music.random");
+        intentFilter.addAction("music.loop.all");
+        intentFilter.addAction("music.loop.single");
+        intentFilter.addAction("music.loop.random");
+        intentFilter.addAction("music.list.open");
+        intentFilter.addAction("music.list.close");
+        intentFilter.addAction("music.favour");
+        intentFilter.addAction("music.unfavour");
+        intentFilter.addAction("music.favour.open");
+        intentFilter.addAction("music.unfavour.close");
+        intentFilter.addAction("txz.kws.set");
+        intentFilter.addAction("txz.theme.set");
+        intentFilter.addAction("custom.dialog.cancel");
+        intentFilter.addAction("com.ofilm.gesture.send.music");
+        registerReceiver(new MusicReceiver(),intentFilter);
     }
 
     @Override

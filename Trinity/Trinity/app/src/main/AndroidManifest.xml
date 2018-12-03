@@ -60,7 +60,7 @@
             android:screenOrientation="landscape" />
 
         <receiver
-            android:name="of.media.bq.broadcastReceiver.musicReceiver"
+            android:name="of.media.bq.broadcastReceiver.MusicReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -82,6 +82,7 @@
                 <action android:name="music.unfavour"/>
                 <action android:name="music.favour.open"/>
                 <action android:name="music.unfavour.close"/>
+                <action android:name="com.ofilm.gesture.send.music"/>
             </intent-filter>
         </receiver>
 

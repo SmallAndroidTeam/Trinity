@@ -106,8 +106,8 @@ public class LocalFragment extends Fragment implements View.OnClickListener {
                 if(localVideoFragment==null){
                     localVideoFragment=new LocalVideoFragment();
                     fragmentTransaction.add(R.id.localFrameLayout,localVideoFragment);
-                    
                 }else{
+                    ((LocalVideoFragment)localVideoFragment).reshow();
                     fragmentTransaction.show(localVideoFragment);
                 }
                 break;

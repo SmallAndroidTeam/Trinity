@@ -32,7 +32,8 @@ public class LocalVideoAdapter extends BaseAdapter {
     private List<Video> videoList=new ArrayList<>();
     private int position=0;//当前选中的视频下标
     public LocalVideoAdapter(List<Video> videoList) {
-     this.videoList=videoList;
+     this.videoList.clear();
+     this.videoList.addAll(videoList);
     }
 
     public int getPosition() {
@@ -48,8 +49,8 @@ public class LocalVideoAdapter extends BaseAdapter {
     }
 
     public void setVideoList(List<Video> videoList) {
-
-        SaveData.copy(videoList,this.videoList);
+        this.videoList.clear();
+        this.videoList.addAll(videoList);
     }
 
     @Override
@@ -82,8 +83,6 @@ public class LocalVideoAdapter extends BaseAdapter {
         }else {
             viewHolder= (ViewHolder) view.getTag();
         }
-
-
         Bitmap videBitmap=null;
         if(videoList.get(i).getThumbnail()!=null){
             videBitmap=videoList.get(i).getThumbnail();
@@ -117,7 +116,7 @@ public class LocalVideoAdapter extends BaseAdapter {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("trinity16", "onClick: 音乐列表的长度："+videoList.size()+"//"+index+"//"+SaveData.getLocalVideoList().size());
+                Log.i("trinity16", "onClick: 视频列表的长度："+videoList.size()+"//"+index+"//"+SaveData.getLocalVideoList().size());
                 if(videoList.size()==0){
                     SaveData.copy(SaveData.getLocalVideoList(),videoList);
                 }
