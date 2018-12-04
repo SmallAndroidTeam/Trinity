@@ -1,18 +1,12 @@
 package of.media.bq.broadcastReceiver;
 
-import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
-
-import java.util.List;
 
 import of.media.bq.fragment.MultiMediaFragment;
 import of.media.bq.service.MusicService;
-
-
 
 
 public class MusicReceiver extends BroadcastReceiver {
@@ -90,6 +84,7 @@ public class MusicReceiver extends BroadcastReceiver {
         intent.putExtra("key_type",2400);
         intent.putExtra("tts",message);
         context.sendBroadcast(intent);
+        Log.i("sendVoiceBroadCastReceiver",message);
     }
     public  void sendService(Context context,String action){
         Intent intent=new Intent(context, MusicService.class);
