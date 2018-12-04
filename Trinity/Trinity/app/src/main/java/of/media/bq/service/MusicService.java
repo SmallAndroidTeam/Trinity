@@ -381,7 +381,7 @@ public class MusicService extends Service {
     private void pauseMusic(){
         if(isPlaying()){
             mMediaPlayer.pause();
-            sendIntent(getApplicationContext(),PAUSE_ACTION);
+            sendIntent(getApplicationContext(),"pause");
             saveMusicProgress();
             if(mControl!=null){
                 mControl.playButton(0);
@@ -394,7 +394,7 @@ public class MusicService extends Service {
     private void stopMusic(){
         if(mMediaPlayer!=null){
             mMediaPlayer.stop();
-            sendIntent(getApplicationContext(),STOP_ACTION);//改为停止广播
+            sendIntent(getApplicationContext(),"stop");//改为停止广播
             saveMusicProgress();
             if(mControl!=null){
                 mControl.playButton(0);
@@ -405,7 +405,7 @@ public class MusicService extends Service {
     private  void startMusic(){
         if(mMediaPlayer!=null){
             mMediaPlayer.start();
-            sendIntent(getApplicationContext(),START_ACTION);
+            sendIntent(getApplicationContext(),"play");
             if(mControl!=null){
                 mControl.playButton(1);
             }
@@ -419,14 +419,14 @@ public class MusicService extends Service {
                 mControl.playButton(0);
             }
             mMediaPlayer.pause();
-            sendIntent(getApplicationContext(),PAUSE_ACTION);
+            sendIntent(getApplicationContext(),"pause");
             saveMusicProgress();
         }else{
             if(mControl!=null){
                 mControl.playButton(1);
             }
             mMediaPlayer.start();
-            sendIntent(getApplicationContext(),START_ACTION);
+            sendIntent(getApplicationContext(),"start");
         }
         
     }
@@ -580,7 +580,7 @@ public class MusicService extends Service {
     //发送对应action的广播
     public static void sendIntent(Context context,String action){
         Intent intent=new Intent(action);
-        intent.setPackage("thread.ofilm.com.testtrinity");
+        intent.putExtra("status",action);
         context.sendBroadcast(intent);
     }
 }

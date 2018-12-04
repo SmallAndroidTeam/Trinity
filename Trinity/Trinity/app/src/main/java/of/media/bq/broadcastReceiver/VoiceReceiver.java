@@ -36,6 +36,7 @@ public class VoiceReceiver extends BroadcastReceiver {
         // TODO: This method is called when the BroadcastReceiver is receiving
         // an Intent broadcast.
         Log.i(TAG, MultiMediaFragment.isExist()+"             ");
+        Log.i("sendVoiceBroadCastReceiver",intent.getAction());
         if(intent!=null&& MultiMediaFragment.isExist()){
             String action=intent.getAction();
             if(action.contentEquals(PLAY_ACTION)||(action.contentEquals(GESTURE_ACTION)
@@ -92,5 +93,5 @@ public class VoiceReceiver extends BroadcastReceiver {
         intent.setAction(action);
         context.startService(intent);
     }
-
+    
 }
