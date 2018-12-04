@@ -60,7 +60,7 @@
             android:screenOrientation="landscape" />
 
         <receiver
-            android:name="of.media.bq.broadcastReceiver.MusicReceiver"
+            android:name="of.media.bq.broadcastReceiver.VoiceReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

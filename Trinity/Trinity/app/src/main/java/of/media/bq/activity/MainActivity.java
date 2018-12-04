@@ -1,61 +1,31 @@
 package of.media.bq.activity;
 
 import of.media.bq.R;
-import of.media.bq.broadcastReceiver.MusicReceiver;
+import of.media.bq.broadcastReceiver.VoiceReceiver;
 import of.media.bq.fragment.BluetoothFragment;
 import of.media.bq.fragment.CarWeiChatFragment;
-import of.media.bq.fragment.HeartRateFragment;
 import of.media.bq.fragment.InteriorViewFragment;
 import of.media.bq.fragment.MultiMediaFragment;
 import of.media.bq.fragment.OutsideViewFragment;
 import of.media.bq.heartRate.fragment.heartFragment;
 import of.media.bq.localInformation.App;
 
-import android.annotation.SuppressLint;
 import android.content.IntentFilter;
-import android.hardware.radio.ProgramSelector;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
-import android.transition.ArcMotion;
-import android.transition.ChangeBounds;
 import android.transition.Fade;
-import android.transition.Slide;
 import android.transition.TransitionManager;
 import android.transition.TransitionSet;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
-
-
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
 
@@ -119,7 +89,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         intentFilter.addAction("txz.theme.set");
         intentFilter.addAction("custom.dialog.cancel");
         intentFilter.addAction("com.ofilm.gesture.send.music");
-        registerReceiver(new MusicReceiver(),intentFilter);
+        registerReceiver(new VoiceReceiver(),intentFilter);
     }
 
     @Override

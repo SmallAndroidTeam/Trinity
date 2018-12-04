@@ -9,7 +9,7 @@ import of.media.bq.fragment.MultiMediaFragment;
 import of.media.bq.service.MusicService;
 
 
-public class MusicReceiver extends BroadcastReceiver {
+public class VoiceReceiver extends BroadcastReceiver {
     public final static String TAG="bq111";
     public final  static String STOP_ACTION="music.stop";//停止播放
     public final  static String PLAY_ACTION="music.play";//播放
