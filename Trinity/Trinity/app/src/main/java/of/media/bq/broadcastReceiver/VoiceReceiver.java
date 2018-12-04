@@ -36,8 +36,9 @@ public class VoiceReceiver extends BroadcastReceiver {
         // TODO: This method is called when the BroadcastReceiver is receiving
         // an Intent broadcast.
         Log.i(TAG, MultiMediaFragment.isExist()+"             ");
-        Log.i("sendVoiceBroadCastReceiver",intent.getAction());
+        
         if(intent!=null&& MultiMediaFragment.isExist()){
+            Log.i("sendVoiceBroadCastReceiver",intent.getAction());
             String action=intent.getAction();
             if(action.contentEquals(PLAY_ACTION)||(action.contentEquals(GESTURE_ACTION)
                     &&intent.getStringExtra(KEY_TYPE).contentEquals("10011")
@@ -45,30 +46,26 @@ public class VoiceReceiver extends BroadcastReceiver {
                     &&intent.getIntExtra("EXTRA_status",0)==1)) {
                 sendService(context,action);
                 sendVoiceBroadCastReceiver(context,"为您播放音乐");
-            }
-            else if(action.contentEquals(PAUSE_ACTION)||(action.contentEquals(GESTURE_ACTION)
+            } else if(action.contentEquals(PAUSE_ACTION)||(action.contentEquals(GESTURE_ACTION)
                     &&intent.getStringExtra(KEY_TYPE).contentEquals("10011")
                     &&intent.getStringExtra("SOURCE_APP").contentEquals("ofilm")
                     &&intent.getIntExtra("EXTRA_status",0)==0)){
                 sendService(context,action);
                 sendVoiceBroadCastReceiver(context,"暂停播放音乐");
-            }
-            else if(action.contentEquals(PREV_ACTION)||(action.contentEquals(GESTURE_ACTION)
+            } else if(action.contentEquals(PREV_ACTION)||(action.contentEquals(GESTURE_ACTION)
                     &&intent.getStringExtra(KEY_TYPE).contentEquals("10009")
                     &&intent.getStringExtra("SOURCE_APP").contentEquals("ofilm")
                     &&intent.getIntExtra("EXTRA_status",0)==0)){
                 sendService(context,PREV_ACTION);
                 sendVoiceBroadCastReceiver(context,"上一首");
-            }
-            else if(action.contentEquals(NEXT_ACTION)||(action.contentEquals(GESTURE_ACTION)
+            } else if(action.contentEquals(NEXT_ACTION)||(action.contentEquals(GESTURE_ACTION)
                     &&intent.getStringExtra(KEY_TYPE).contentEquals("10010")
                     &&intent.getStringExtra("SOURCE_APP").contentEquals("ofilm")
                     &&intent.getIntExtra("EXTRA_status",0)==1)
                     ){
                 sendService(context,NEXT_ACTION);
                 sendVoiceBroadCastReceiver(context,"下一首");
-            }
-            else if(action.contentEquals(START_ACTION)){
+            } else if(action.contentEquals(START_ACTION)){
                 sendService(context,START_ACTION);
             }
             else if(action.contentEquals(STOP_ACTION)){

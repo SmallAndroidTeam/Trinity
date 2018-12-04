@@ -10,6 +10,7 @@ import of.media.bq.fragment.OutsideViewFragment;
 import of.media.bq.heartRate.fragment.heartFragment;
 import of.media.bq.localInformation.App;
 
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -19,6 +20,7 @@ import android.os.Bundle;
 import android.transition.Fade;
 import android.transition.TransitionManager;
 import android.transition.TransitionSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
@@ -90,6 +92,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         intentFilter.addAction("custom.dialog.cancel");
         intentFilter.addAction("com.ofilm.gesture.send.music");
         registerReceiver(new VoiceReceiver(),intentFilter);
+        //打开此应用时 给语音发广播
+        Intent intent = new Intent("com.txznet.adapter.recv");
+        intent.putExtra("action","radio.type");
+        intent.putExtra("type","local");
+        intent.putExtra("key_type", 2060);
+        getBaseContext().sendBroadcast(intent);
+        Log.i("sendVoiceBroadCastReceiver","sendVoiceBroadCastReceiver");
     }
 
     @Override
