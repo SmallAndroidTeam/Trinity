@@ -3,12 +3,16 @@
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:layout_marginTop="30px" android:paddingLeft="30px"
     >
-    <GridView
-        android:id="@+id/localGalleryGridView"
-        android:layout_width="1660px"
-        android:layout_height="match_parent"
-        >
-    </GridView>
-
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout_gallery"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <GridView
+            android:id="@+id/localGalleryGridView"
+            android:layout_width="1660px"
+            android:layout_height="match_parent"
+            >
+        </GridView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

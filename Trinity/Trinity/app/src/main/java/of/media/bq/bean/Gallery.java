@@ -7,16 +7,16 @@ import android.graphics.Bitmap;
  */
 public class Gallery {
     private Bitmap thumbnail;//缩略图
-    private  int galleryAddress;//图片的路径（测试用的是资源文件)
+    private  String galleryAddress;//图片的路径（测试用的是资源文件)
 
     public Gallery() {
     }
 
-    public Gallery(int galleryAddress) {
+    public Gallery(String galleryAddress) {
         this.galleryAddress = galleryAddress;
     }
 
-    public Gallery(Bitmap thumbnail, int galleryAddress) {
+    public Gallery(Bitmap thumbnail, String galleryAddress) {
         this.thumbnail = thumbnail;
         this.galleryAddress = galleryAddress;
     }
@@ -29,11 +29,11 @@ public class Gallery {
         this.thumbnail = thumbnail;
     }
 
-    public int getGalleryAddress() {
+    public String getGalleryAddress() {
         return galleryAddress;
     }
 
-    public void setGalleryAddress(int galleryAddress) {
+    public void setGalleryAddress(String galleryAddress) {
         this.galleryAddress = galleryAddress;
     }
 }

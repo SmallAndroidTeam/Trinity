@@ -1,11 +1,15 @@
 package of.media.bq.fragment;
 import of.media.bq.R;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.transition.Fade;
 import android.transition.Slide;
 import android.transition.TransitionManager;
@@ -35,7 +39,28 @@ public class LocalVideoFragment extends Fragment {
     private    GridView localVideoGridView;
     private LocalVideoAdapter localVideoAdapter;
     private  boolean isFirstLoad=true;//判断是否第一次加载
-    
+    private SwipeRefreshLayout swipeRefreshLayoutVideo;
+    private final static int UPDATE_VIDEO=1;
+    private final static int SET_VIDEO=2;
+    @SuppressLint("HandlerLeak")
+    private Handler mhander=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case SET_VIDEO:
+                    localVideoGridView.setAdapter(localVideoAdapter);
+
+                    break;
+                case UPDATE_VIDEO:
+                    localVideoAdapter.notifyDataSetChanged();
+                    swipeRefreshLayoutVideo.setRefreshing(false);
+                    OneToast.showMessage(getContext(),"刷新成功");
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.local_video_fragment,container,false);
@@ -46,18 +71,24 @@ public class LocalVideoFragment extends Fragment {
     }
 
     private void initData() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //获取测试的视频地址
+                List<Video> videoList = new ArrayList<>(FileManger.getInstance(getContext()).getVideos());
+                if(videoList.size()==0){
+                    OneToast.showMessage(getContext(),"当前无本地视频");
+                }
+                SaveData.setLocalVideoList(videoList);
+                localVideoAdapter = new LocalVideoAdapter(videoList);
+                localVideoGridView.setNumColumns(4);
+                localVideoGridView.setVerticalSpacing(20);
+                localVideoGridView.setHorizontalSpacing(20);
+                mhander.sendEmptyMessageDelayed(SET_VIDEO,300);
+            }
+        }).start();
 
-        //获取测试的视频地址
-        List<Video> videoList = new ArrayList<>(FileManger.getInstance(getContext()).getVideos());
-        if(videoList.size()==0){
-            OneToast.showMessage(getContext(),"当前无本地视频");
-        }
-        SaveData.setLocalVideoList(videoList);
-        localVideoAdapter = new LocalVideoAdapter(videoList);
-        localVideoGridView.setNumColumns(4);
-        localVideoGridView.setVerticalSpacing(20);
-        localVideoGridView.setHorizontalSpacing(20);
-        localVideoGridView.setAdapter(localVideoAdapter);
+
     }
 
 
@@ -92,6 +123,7 @@ public class LocalVideoFragment extends Fragment {
     }
     private void initView(View view) {
         localVideoGridView = view.findViewById(R.id.localVideoGridView);
+        swipeRefreshLayoutVideo = view.findViewById(R.id.swipe_refresh_layout_video);
     }
     
     
@@ -112,6 +144,25 @@ public class LocalVideoFragment extends Fragment {
 //
 //            }
 //        });
+        swipeRefreshLayoutVideo.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //获取测试的视频地址
+                        List<Video> videoList = new ArrayList<>(FileManger.getInstance(getContext()).getVideos());
+                        if(videoList.size()==0){
+                            OneToast.showMessage(getContext(),"当前无本地视频");
+                        }
+                        SaveData.setLocalVideoList(videoList);
+                        localVideoAdapter.setVideoList(videoList);
+                        mhander.sendEmptyMessageDelayed(UPDATE_VIDEO,500);
+
+                    }
+                }).start();
+            }
+        });
     
     }
     

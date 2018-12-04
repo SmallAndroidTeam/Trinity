@@ -6,13 +6,19 @@
     >
   <!--android:verticalSpacing="20px"-->
   <!--android:horizontalSpacing="20px"-->
-  <GridView
-      android:id="@+id/localVideoGridView"
-      android:layout_width="1620px"
-      android:layout_height="460px"
+  <android.support.v4.widget.SwipeRefreshLayout
+      android:id="@+id/swipe_refresh_layout_video"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
+    <GridView
+        android:id="@+id/localVideoGridView"
+        android:layout_width="1620px"
+        android:layout_height="460px"
 
-      >
-  </GridView>
+        >
+    </GridView>
+  </android.support.v4.widget.SwipeRefreshLayout>
+
   <!--<RelativeLayout-->
   <!--android:id="@+id/videRelativeLayout"-->
   <!--android:background="@drawable/video_image_frame"-->

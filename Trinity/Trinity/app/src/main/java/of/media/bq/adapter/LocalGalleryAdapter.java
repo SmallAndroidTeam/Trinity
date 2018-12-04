@@ -66,7 +66,7 @@ public class LocalGalleryAdapter extends BaseAdapter{
         }
         Gallery gallery=galleryList.get(i);
         if(gallery.getThumbnail()==null){
-            gallery.setThumbnail(GetThumbnail.getImageThumbnailById(context.getResources(),galleryList.get(i).getGalleryAddress(),
+            gallery.setThumbnail(GetThumbnail.getImageThumbnailByAddress(galleryList.get(i).getGalleryAddress(),
                     GALLERY_WIDTH, GALLERY_Height));
             galleryList.set(i,gallery);
         }

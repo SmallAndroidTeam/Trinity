@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 
@@ -235,4 +236,29 @@ public class FileManger {
         File file=new File(videoPath);
             return file.length();
     }
+
+    /**
+     * 获取本地的图片
+     * @return
+     */
+    public  List<String> getImages(){
+List<String> imagePathList=new ArrayList<>();
+        Uri mImageUri=MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        ContentResolver contentResolver=context.getContentResolver();
+        Cursor cursor=contentResolver.query(mImageUri,null,  MediaStore.Images.Media.MIME_TYPE + "=? or "
+                        + MediaStore.Images.Media.MIME_TYPE + "=?",
+                new String[]{"image/jpeg", "image/png"}, MediaStore.Images.Media.DATE_MODIFIED);
+        if(cursor==null){
+            return imagePathList;
+        }
+        while (cursor.moveToNext()){
+            String path=cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+            if(new File(path).exists()){
+                imagePathList.add(path);
+            }
+        }
+        return imagePathList;
+    }
+
+
 }

@@ -1,6 +1,7 @@
 package of.media.bq.fragment;
 import of.media.bq.R;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,9 +10,12 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,13 +33,17 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 
+import com.bumptech.glide.Glide;
+
 import of.media.bq.adapter.LocalGalleryAdapter;
 import of.media.bq.bean.Gallery;
+import of.media.bq.localInformation.FileManger;
 import of.meida.bq.convertPXAndDP.DensityUtil;
 import of.media.bq.toast.OneToast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by MR.XIE on 2018/10/23.
@@ -48,6 +56,28 @@ public class LocalGalleryFragment extends Fragment {
     private int position=-1;
     private  float fromDegress=0;//旋转开始的角度
 
+    private final static int UPDATE_GALLERY=1;
+    private final static int SET_GALLERY=2;
+    @SuppressLint("HandlerLeak")
+    private Handler mhander=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+          switch (msg.what){
+              case SET_GALLERY:
+                  localGalleryGridView.setAdapter(localGalleryAdapter);
+
+                  break;
+              case UPDATE_GALLERY:
+                 localGalleryAdapter.notifyDataSetChanged();
+                  imageSwipeRefreshLayout.setRefreshing(false);
+                  OneToast.showMessage(getContext(),"刷新成功");
+                  break;
+                  default:
+                      break;
+          }
+        }
+    };
+    private SwipeRefreshLayout imageSwipeRefreshLayout;
 
     @Nullable
     @Override
@@ -66,11 +96,32 @@ public class LocalGalleryFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 position=i;
                 galleryDialog().show();
-                galleryImageview.setImageResource(localGalleryAdapter.getGalleryList().get(i).getGalleryAddress());
+
+                Glide.with(Objects.requireNonNull(getContext())).load(localGalleryAdapter.getGalleryList().get(i).getGalleryAddress()).into(galleryImageview);
                 final AnimationSet animationSet= (AnimationSet) AnimationUtils.loadAnimation(getContext(),R.anim.music_album_change);
                 galleryImageview.startAnimation(animationSet);
             }
         });
+
+
+        imageSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        List<Gallery> galleryList=new ArrayList<>();
+                        List<String> imagePathList= FileManger.getInstance(getContext()).getImages();
+                        for(String path:imagePathList){
+                            galleryList.add(new Gallery(path));
+                        }
+                        localGalleryAdapter.setGalleryList(galleryList);
+                        mhander.sendEmptyMessageDelayed(UPDATE_GALLERY,500);
+                    }
+                }).start();
+            }
+        });
+
     }
 
 
@@ -115,7 +166,8 @@ public class LocalGalleryFragment extends Fragment {
                     OneToast.showMessage(getContext(),"已经是最后一张了");
                 }else{
                     position=position==size-1?0:position+1;
-                    galleryImageview.setImageBitmap(BitmapFactory.decodeResource(getResources(),localGalleryAdapter.getGalleryList().get(position).getGalleryAddress()));
+                    Glide.with(Objects.requireNonNull(getContext())).load(localGalleryAdapter.getGalleryList().get(position).getGalleryAddress()).into(galleryImageview);
+
                     final AnimationSet animationSet= ( AnimationSet) AnimationUtils.loadAnimation(getContext(),R.anim.next_gallery_image);
                     galleryImageview.startAnimation(animationSet);
                 }
@@ -136,7 +188,7 @@ public class LocalGalleryFragment extends Fragment {
                     OneToast.showMessage(getContext(),"已经是第一张了");
                 } else{
                     position= position - 1;
-                    galleryImageview.setImageResource(localGalleryAdapter.getGalleryList().get(position).getGalleryAddress());
+                    Glide.with(Objects.requireNonNull(getContext())).load(localGalleryAdapter.getGalleryList().get(position).getGalleryAddress()).into(galleryImageview);
                     final AnimationSet animationSet= (AnimationSet) AnimationUtils.loadAnimation(getContext(),R.anim.prev_gallery_image);
                     galleryImageview.startAnimation(animationSet);
                 }
@@ -244,26 +296,26 @@ public class LocalGalleryFragment extends Fragment {
 
     private void initView(View view) {
         localGalleryGridView = view.findViewById(R.id.localGalleryGridView);
-
-
+        imageSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout_gallery);
     }
     private void initData() {
-        List<Gallery> galleryList=addData();
-        localGalleryAdapter = new LocalGalleryAdapter(getContext(),galleryList);
-        localGalleryGridView.setNumColumns(7);
-        localGalleryGridView.setHorizontalSpacing(20);
-        localGalleryGridView.setVerticalSpacing(20);
-        localGalleryGridView.setAdapter(localGalleryAdapter);
+      new Thread(new Runnable() {
+          @Override
+          public void run() {
+              List<Gallery> galleryList=new ArrayList<>();
+              List<String> imagePathList= FileManger.getInstance(getContext()).getImages();
+              for(String path:imagePathList){
+                  galleryList.add(new Gallery(path));
+              }
+              localGalleryAdapter = new LocalGalleryAdapter(getContext(),galleryList);
+              localGalleryGridView.setNumColumns(7);
+              localGalleryGridView.setHorizontalSpacing(20);
+              localGalleryGridView.setVerticalSpacing(20);
+              mhander.sendEmptyMessage(SET_GALLERY);
+          }
+      }).start();
+
+
     }
-    private List<Gallery> addData(){
-        List<Gallery> galleryList=new ArrayList<>();
-        final Integer[] galleryIDs=new Integer[]{R.drawable.p1,R.drawable.p2,R.drawable.p3,R.drawable.p4,R.drawable.p5,R.drawable.p6,R.drawable.p7,R.drawable.p8
-        ,R.drawable.p9,R.drawable.p10};
-        Gallery gallery=null;
-        for(Integer id:galleryIDs){
-            gallery=new Gallery(id);
-            galleryList.add(gallery);
-        }
-        return galleryList;
-    }
+
 }
