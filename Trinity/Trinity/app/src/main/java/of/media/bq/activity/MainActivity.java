@@ -68,9 +68,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         initShowFragment();
         App.sContext=this;
         start=true;
-        IntentFilter intentFilter=new IntentFilter("com.txznet.adapter.recv");
-        intentFilter.addAction("com.ofilm.gesture.send.music");
-        registerReceiver(new VoiceReceiver(),intentFilter);
+   
     
     }
 

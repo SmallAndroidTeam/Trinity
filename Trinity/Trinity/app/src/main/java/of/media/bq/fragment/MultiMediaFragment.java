@@ -3,6 +3,7 @@ import of.media.bq.R;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
@@ -38,6 +39,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import of.media.bq.adapter.IconAdapter;
+import of.media.bq.broadcastReceiver.VoiceReceiver;
 import of.meida.bq.convertPXAndDP.DensityUtil;
 import of.media.bq.localInformation.App;
 
@@ -57,6 +59,10 @@ public class MultiMediaFragment extends Fragment implements View.OnClickListener
         initEvents();
         selectTab(0);
         exist=true;
+        IntentFilter intentFilter=new IntentFilter();
+        intentFilter.addAction("com.txznet.adapter.send");
+        intentFilter.addAction("com.ofilm.gesture.send");
+        getContext().registerReceiver(new VoiceReceiver(),intentFilter);
         //打开此应用时 给语音发广播
         Intent intent = new Intent("com.txznet.adapter.recv");
         intent.putExtra("action","radio.type");

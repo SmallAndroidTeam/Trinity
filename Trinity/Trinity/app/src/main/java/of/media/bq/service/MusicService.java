@@ -306,7 +306,8 @@ public class MusicService extends Service {
         }else if(action.contentEquals(PAUSE_ACTION)){
             pauseMusic();
             NotificationChange(TOGGLEPAUSE_ACTION);//改变前台服务中的音乐状态信息
-        }else if(action.contentEquals(START_ACTION)){
+        }
+        else if(action.contentEquals(START_ACTION)||action.contentEquals(PLAY_ACTION)){
             startMusic();
             NotificationChange(TOGGLEPAUSE_ACTION);//改变前台服务中的音乐状态信息
         }
