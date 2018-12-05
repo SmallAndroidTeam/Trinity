@@ -452,7 +452,7 @@ public class MusicService extends Service {
                 mMediaPlayer.prepare();
                 mMediaPlayer.seekTo(musicList.get(currentPosition).getProgress());
                 mMediaPlayer.start();
-                sendIntent(getApplicationContext(),PREV_ACTION);
+              
                 if(mControl!=null){
                     mControl.playButton(1);
                     mControl.updateUI();
@@ -484,7 +484,7 @@ public class MusicService extends Service {
                 mMediaPlayer.prepare();
                 mMediaPlayer.seekTo(musicList.get(currentPosition).getProgress());
                 mMediaPlayer.start();
-                sendIntent(getApplicationContext(),NEXT_ACTION);
+              
                 if(mControl!=null){
                     mControl.playButton(1);
                     mControl.updateUI();

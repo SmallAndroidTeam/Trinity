@@ -30,52 +30,96 @@ public class VoiceReceiver extends BroadcastReceiver {
     public final static String FAVOUROPEN_ACTION="music.favour.open";//打开收藏列表
     public final static String UNFAVOURCLOSE_ACTION="music.unfavour.close";//关闭收藏列表
     public final static String GESTURE_ACTION="com.ofilm.gesture.send.music";//手势控制音乐
-    private  String KEY_TYPE="KEY_TYPE";
+    public final static String VOICE_ACTION="com.txznet.adapter.recv";
+    private  String KEY_TYPE="key_type";
     @Override
     public void onReceive(Context context, Intent intent) {
         // TODO: This method is called when the BroadcastReceiver is receiving
         // an Intent broadcast.
-        Log.i(TAG, MultiMediaFragment.isExist()+"             ");
-        
-        if(intent!=null&& MultiMediaFragment.isExist()){
-            Log.i("sendVoiceBroadCastReceiver",intent.getAction());
-            String action=intent.getAction();
-            if(action.contentEquals(PLAY_ACTION)||(action.contentEquals(GESTURE_ACTION)
-                    &&intent.getStringExtra(KEY_TYPE).contentEquals("10011")
-                    &&intent.getStringExtra("SOURCE_APP").contentEquals("ofilm")
-                    &&intent.getIntExtra("EXTRA_status",0)==1)) {
-                sendService(context,action);
-                sendVoiceBroadCastReceiver(context,"为您播放音乐");
-            } else if(action.contentEquals(PAUSE_ACTION)||(action.contentEquals(GESTURE_ACTION)
-                    &&intent.getStringExtra(KEY_TYPE).contentEquals("10011")
-                    &&intent.getStringExtra("SOURCE_APP").contentEquals("ofilm")
-                    &&intent.getIntExtra("EXTRA_status",0)==0)){
-                sendService(context,action);
-                sendVoiceBroadCastReceiver(context,"暂停播放音乐");
-            } else if(action.contentEquals(PREV_ACTION)||(action.contentEquals(GESTURE_ACTION)
-                    &&intent.getStringExtra(KEY_TYPE).contentEquals("10009")
-                    &&intent.getStringExtra("SOURCE_APP").contentEquals("ofilm")
-                    &&intent.getIntExtra("EXTRA_status",0)==0)){
-                sendService(context,PREV_ACTION);
-                sendVoiceBroadCastReceiver(context,"上一首");
-            } else if(action.contentEquals(NEXT_ACTION)||(action.contentEquals(GESTURE_ACTION)
-                    &&intent.getStringExtra(KEY_TYPE).contentEquals("10010")
-                    &&intent.getStringExtra("SOURCE_APP").contentEquals("ofilm")
-                    &&intent.getIntExtra("EXTRA_status",0)==1)
-                    ){
-                sendService(context,NEXT_ACTION);
-                sendVoiceBroadCastReceiver(context,"下一首");
-            } else if(action.contentEquals(START_ACTION)){
-                sendService(context,START_ACTION);
+        String action=intent.getAction();
+        if(intent!=null&& action!=null&&MultiMediaFragment.isExist()){
+            Log.i("sendVoiceBroadCastReceiver", MultiMediaFragment.isExist()+"             ");
+            if(action.contentEquals(VOICE_ACTION)&&intent.getStringExtra("action")!=null&&intent.getIntExtra(KEY_TYPE,0)==1060){
+                String value=intent.getStringExtra("action");
+                if(value.contentEquals(PLAY_ACTION)){
+                    sendService(context,action);
+                    Log.i("sendVoiceBroadCastReceiver",action);
+                    sendVoiceBroadCastReceiver(context,"为您播放音乐");
+                }else if(value.contentEquals(PAUSE_ACTION)){
+                    Log.i("sendVoiceBroadCastReceiver",action);
+                    sendService(context,action);
+                    sendVoiceBroadCastReceiver(context,"暂停播放音乐");
+                }else if(value.contentEquals(PREV_ACTION)){
+                    Log.i("sendVoiceBroadCastReceiver",action);
+                    sendService(context,PREV_ACTION);
+                    sendVoiceBroadCastReceiver(context,"上一首");
+                }else if(value.contentEquals(NEXT_ACTION)){
+                    Log.i("sendVoiceBroadCastReceiver",action);
+                    sendService(context,NEXT_ACTION);
+                    sendVoiceBroadCastReceiver(context,"下一首");
+                }
+            }else if(action.contentEquals(GESTURE_ACTION)&&intent.getStringExtra("SOURCE_APP")!=null&&intent.getStringExtra("SOURCE_APP").contentEquals("ofilm")){
+                int keyType=intent.getIntExtra(KEY_TYPE,0);
+                int extraStatus=intent.getIntExtra("EXTRA_status",0);
+                if(keyType==10011&&extraStatus==1){
+                    Log.i("sendVoiceBroadCastReceiver",action);
+                    sendService(context,action);
+                    sendVoiceBroadCastReceiver(context,"为您播放音乐");
+                }else   if(keyType==10011&&extraStatus==0){
+                    Log.i("sendVoiceBroadCastReceiver",action);
+                    sendService(context,action);
+                    sendVoiceBroadCastReceiver(context,"暂停播放音乐");
+                }else   if(keyType==10009&&extraStatus==0){
+                    Log.i("sendVoiceBroadCastReceiver",action);
+                    sendService(context,PREV_ACTION);
+                    sendVoiceBroadCastReceiver(context,"上一首");
+                }else   if(keyType==10010&&extraStatus==1){
+                    Log.i("sendVoiceBroadCastReceiver",action);
+                    sendService(context,NEXT_ACTION);
+                    sendVoiceBroadCastReceiver(context,"下一首");
+                }
             }
-            else if(action.contentEquals(STOP_ACTION)){
-                sendService(context,STOP_ACTION);
-            }
+            
+            
+            
+            
+//
+//            if((action.contentEquals(PLAY_ACTION)&&intent.)||(action.contentEquals(GESTURE_ACTION)
+//                    &&intent.getStringExtra(KEY_TYPE).contentEquals("10011")
+//                    &&intent.getStringExtra("SOURCE_APP").contentEquals("ofilm")
+//                    &&intent.getIntExtra("EXTRA_status",0)==1)) {
+//                sendService(context,action);
+//                sendVoiceBroadCastReceiver(context,"为您播放音乐");
+//            } else if(action.contentEquals(PAUSE_ACTION)||(action.contentEquals(GESTURE_ACTION)
+//                    &&intent.getStringExtra(KEY_TYPE).contentEquals("10011")
+//                    &&intent.getStringExtra("SOURCE_APP").contentEquals("ofilm")
+//                    &&intent.getIntExtra("EXTRA_status",0)==0)){
+//                sendService(context,action);
+//                sendVoiceBroadCastReceiver(context,"暂停播放音乐");
+//            } else if(action.contentEquals(PREV_ACTION)||(action.contentEquals(GESTURE_ACTION)
+//                    &&intent.getStringExtra(KEY_TYPE).contentEquals("10009")
+//                    &&intent.getStringExtra("SOURCE_APP").contentEquals("ofilm")
+//                    &&intent.getIntExtra("EXTRA_status",0)==0)){
+//                sendService(context,PREV_ACTION);
+//                sendVoiceBroadCastReceiver(context,"上一首");
+//            } else if(action.contentEquals(NEXT_ACTION)||(action.contentEquals(GESTURE_ACTION)
+//                    &&intent.getStringExtra(KEY_TYPE).contentEquals("10010")
+//                    &&intent.getStringExtra("SOURCE_APP").contentEquals("ofilm")
+//                    &&intent.getIntExtra("EXTRA_status",0)==1)
+//                    ){
+//                sendService(context,NEXT_ACTION);
+//                sendVoiceBroadCastReceiver(context,"下一首");
+//            } else if(action.contentEquals(START_ACTION)){
+//                sendService(context,START_ACTION);
+//            }
+//            else if(action.contentEquals(STOP_ACTION)){
+//                sendService(context,STOP_ACTION);
+//            }
         } else {
             sendVoiceBroadCastReceiver(context,"您未打开音乐");
         }
     }
-    //播放语音广播
+    //发送播放语音广播
     public   void sendVoiceBroadCastReceiver(Context context,String message){
         Intent intent=new Intent("com.txznet.adapter.recv");
         intent.putExtra("action", "txz.tts.speak");
@@ -88,6 +132,7 @@ public class VoiceReceiver extends BroadcastReceiver {
         Intent intent=new Intent(context, MusicService.class);
         intent.putExtra("flag",MusicService.FLAG);
         intent.setAction(action);
+        Log.i("sendVoiceBroadCastReceiver",action);
         context.startService(intent);
     }
     

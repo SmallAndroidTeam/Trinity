@@ -68,37 +68,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         initShowFragment();
         App.sContext=this;
         start=true;
-        IntentFilter intentFilter=new IntentFilter();
-        intentFilter.addAction("music.play");
-        intentFilter.addAction("music.prev");
-        intentFilter.addAction("music.next");
-        intentFilter.addAction("music.pause");
-        intentFilter.addAction("music.start");
-        intentFilter.addAction("music.open");
-        intentFilter.addAction("music.close");
-        intentFilter.addAction("music.continue");
-        intentFilter.addAction("music.random");
-        intentFilter.addAction("music.loop.all");
-        intentFilter.addAction("music.loop.single");
-        intentFilter.addAction("music.loop.random");
-        intentFilter.addAction("music.list.open");
-        intentFilter.addAction("music.list.close");
-        intentFilter.addAction("music.favour");
-        intentFilter.addAction("music.unfavour");
-        intentFilter.addAction("music.favour.open");
-        intentFilter.addAction("music.unfavour.close");
-        intentFilter.addAction("txz.kws.set");
-        intentFilter.addAction("txz.theme.set");
-        intentFilter.addAction("custom.dialog.cancel");
+        IntentFilter intentFilter=new IntentFilter("com.txznet.adapter.recv");
         intentFilter.addAction("com.ofilm.gesture.send.music");
         registerReceiver(new VoiceReceiver(),intentFilter);
-        //打开此应用时 给语音发广播
-        Intent intent = new Intent("com.txznet.adapter.recv");
-        intent.putExtra("action","radio.type");
-        intent.putExtra("type","local");
-        intent.putExtra("key_type", 2060);
-        getBaseContext().sendBroadcast(intent);
-        Log.i("sendVoiceBroadCastReceiver","sendVoiceBroadCastReceiver");
+    
     }
 
     @Override

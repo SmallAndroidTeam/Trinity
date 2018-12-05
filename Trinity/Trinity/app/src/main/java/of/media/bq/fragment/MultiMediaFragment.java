@@ -2,6 +2,7 @@ package of.media.bq.fragment;
 import of.media.bq.R;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
@@ -56,6 +57,13 @@ public class MultiMediaFragment extends Fragment implements View.OnClickListener
         initEvents();
         selectTab(0);
         exist=true;
+        //打开此应用时 给语音发广播
+        Intent intent = new Intent("com.txznet.adapter.recv");
+        intent.putExtra("action","radio.type");
+        intent.putExtra("type","local");
+        intent.putExtra("key_type", 2060);
+        getContext().sendBroadcast(intent);
+        Log.i("sendVoiceBroadCastReceiver","sendVoiceBroadCastReceiver");
         return view;
     }
     
