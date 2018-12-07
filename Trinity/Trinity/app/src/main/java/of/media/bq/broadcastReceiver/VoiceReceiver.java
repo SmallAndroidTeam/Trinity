@@ -31,6 +31,7 @@ public class VoiceReceiver extends BroadcastReceiver {
     public final static String UNFAVOURCLOSE_ACTION="music.unfavour.close";//关闭收藏列表
     public final static String GESTURE_ACTION="com.ofilm.gesture.send";//手势控制音乐
     public final static String VOICE_ACTION="com.txznet.adapter.send";
+    public final static String TOGGLEPAUSE_ACTION="music.toggle";//切换播放状态
     private  String KEY_TYPE="key_type";
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -63,23 +64,14 @@ public class VoiceReceiver extends BroadcastReceiver {
             }else if(action.contentEquals(GESTURE_ACTION)&&intent.getStringExtra("SOURCE_APP")!=null&&intent.getStringExtra("SOURCE_APP").contentEquals("ofilm")){
                 int keyType=intent.getIntExtra(KEY_TYPE,0);
                 int extraStatus=intent.getIntExtra("EXTRA_status",0);
-                if(keyType==10011&&extraStatus==1){
-                    Log.i("sendVoiceBroadCastReceiver",PLAY_ACTION);
-                    
-                    sendVoiceBroadCastReceiver(context,"为您播放音乐");
-                    sendService(context,PLAY_ACTION);
-                }else   if(keyType==10011&&extraStatus==0){
-                    Log.i("sendVoiceBroadCastReceiver",PAUSE_ACTION);
-                    sendVoiceBroadCastReceiver(context,"暂停播放音乐");
-                    sendService(context,PAUSE_ACTION);
+                if(keyType==10011){
+                    Log.i("sendVoiceBroadCastReceiver",TOGGLEPAUSE_ACTION);
+                    sendService(context,TOGGLEPAUSE_ACTION);
                 }else   if(keyType==10009&&extraStatus==0){
                     Log.i("sendVoiceBroadCastReceiver",PREV_ACTION);
-                    
-                    sendVoiceBroadCastReceiver(context,"上一首");
                     sendService(context,PREV_ACTION);
                 }else   if(keyType==10010&&extraStatus==1){
                     Log.i("sendVoiceBroadCastReceiver",NEXT_ACTION);
-                    sendVoiceBroadCastReceiver(context,"下一首");
                     sendService(context,NEXT_ACTION);
                 }
             }
